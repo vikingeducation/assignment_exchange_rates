@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import "../App.css";
-import ExchangeRates from "./ExchangeRates";
-import Select from "./elements/Select";
-import HistoricalRates from "./HistoricalRates";
+import React, { Component } from 'react';
+import '../App.css';
+import ExchangeRates from './ExchangeRates';
+import Select from './elements/Select';
+import HistoricalRates from './HistoricalRates';
 
 class App extends Component {
   constructor() {
@@ -10,7 +10,7 @@ class App extends Component {
     this.state = {
       isFetching: false,
       currencies: [],
-      base: "EUR",
+      base: 'EUR',
       historicalRates: []
     };
   }
@@ -18,7 +18,7 @@ class App extends Component {
   componentDidMount() {
     this.setState({ isFetching: true });
 
-    fetch("http://api.fixer.io/latest")
+    fetch('http://api.fixer.io/latest')
       .then(response => response.json())
       .then(json => {
         let rates = Object.keys(json.rates).map(function(el) {
@@ -28,12 +28,34 @@ class App extends Component {
         let currencies = Object.keys(json.rates);
         this.setState({
           rates,
-          isFetching: false,
           currencies
         });
       });
-    let date = ["2014-01-01", "2015-01-01", "2016-01-01"];
-    fetch();
+
+    let date = ['2014-01-01', '2015-01-01', '2016-01-01'];
+    let fetchPromises = [];
+    let currentBase = this.state.base;
+    let historicalRates = [];
+
+    date.forEach(function(date, index) {
+      fetchPromises.push(
+        fetch(`http://api.fixer.io/${date}/?symbols=${currentBase},USD`)
+          .then(response => response.json())
+          .then(json => {
+            return Object.keys(json.rates).map(function(el) {
+              return `Date: ${date}, ${el}: ${json.rates[el]}`;
+            });
+          })
+      );
+    });
+
+    Promise.all(fetchPromises).then(result => {
+      historicalRates = result[0].concat(result[1], result[2]);
+      this.setState({
+        historicalRates,
+        isFetching: false
+      });
+    });
   }
 
   onChangeHandler = e => {
@@ -56,6 +78,31 @@ class App extends Component {
           isFetching: false
         });
       });
+
+    let date = ['2014-01-01', '2015-01-01', '2016-01-01'];
+    let fetchPromises = [];
+    let currentBase = this.state.base;
+    let historicalRates = [];
+
+    date.forEach(function(date, index) {
+      fetchPromises.push(
+        fetch(`http://api.fixer.io/${date}/?symbols=${currentBase},USD`)
+          .then(response => response.json())
+          .then(json => {
+            return Object.keys(json.rates).map(function(el) {
+              return `Date: ${date}, ${el}: ${json.rates[el]}`;
+            });
+          })
+      );
+    });
+
+    Promise.all(fetchPromises).then(result => {
+      historicalRates = result[0].concat(result[1], result[2]);
+      this.setState({
+        historicalRates,
+        isFetching: false
+      });
+    });
   };
 
   render() {
