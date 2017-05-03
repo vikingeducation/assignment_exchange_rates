@@ -1,8 +1,9 @@
-import React, { Component } from "react";
-import "../App.css";
-import ExchangeRates from "./ExchangeRates";
-import Select from "./elements/Select";
-import HistoricalRates from "./HistoricalRates";
+import React, { Component } from 'react';
+import '../App.css';
+import ExchangeRates from './ExchangeRates';
+import Select from './elements/Select';
+import HistoricalRates from './HistoricalRates';
+import Input from './elements/Input';
 
 class App extends Component {
   constructor() {
@@ -10,7 +11,8 @@ class App extends Component {
     this.state = {
       isFetching: false,
       currencies: [],
-      base: "EUR",
+      base: 'EUR',
+      toCurrency: 'USD',
       historicalRates: []
     };
   }
@@ -18,7 +20,7 @@ class App extends Component {
   componentDidMount() {
     this.setState({ isFetching: true });
 
-    fetch("http://api.fixer.io/latest")
+    fetch('http://api.fixer.io/latest')
       .then(response => response.json())
       .then(json => {
         let rates = Object.keys(json.rates).map(function(el) {
@@ -32,7 +34,7 @@ class App extends Component {
         });
       });
 
-    let date = ["2014-01-01", "2015-01-01", "2016-01-01"];
+    let date = ['2014-01-01', '2015-01-01', '2016-01-01'];
     let fetchPromises = [];
     let historicalRates = [];
 
@@ -58,14 +60,21 @@ class App extends Component {
   }
 
   onChangeHandler = e => {
-    let newCurrency = e.target.value;
+    if (e.target.name == 'from') {
+      var fromCurrency = e.target.value;
+      var toCurrency = this.state.toCurrency;
+    } else {
+      var fromCurrency = this.state.base;
+      var toCurrency = e.target.value;
+    }
 
     this.setState({
       isFetching: true,
-      base: newCurrency
+      base: fromCurrency,
+      toCurrency
     });
 
-    fetch(`http://api.fixer.io/latest?base=${newCurrency}`)
+    fetch(`http://api.fixer.io/latest?base=${fromCurrency}`)
       .then(response => response.json())
       .then(json => {
         let rates = Object.keys(json.rates).map(function(el) {
@@ -78,14 +87,15 @@ class App extends Component {
         });
       });
 
-    let date = ["2014-01-01", "2015-01-01", "2016-01-01"];
+    let date = ['2014-01-01', '2015-01-01', '2016-01-01'];
     let fetchPromises = [];
-    let currentBase = this.state.base;
     let historicalRates = [];
 
     date.forEach(function(date, index) {
       fetchPromises.push(
-        fetch(`http://api.fixer.io/${date}/?base=${newCurrency}&symbols=USD`)
+        fetch(
+          `http://api.fixer.io/${date}/?base=${fromCurrency}&symbols=${toCurrency}`
+        )
           .then(response => response.json())
           .then(json => {
             return Object.keys(json.rates).map(function(el) {
@@ -105,6 +115,21 @@ class App extends Component {
     });
   };
 
+  onChangeInputHandler = e => {
+    let amount = e.target.value;
+    let base = this.state.base;
+    let toCurrency = this.state.toCurrency;
+    let rates = this.state.rates;
+
+    let conversion = rates
+      .filter(function(el) {
+        return el.split(':')[0] == toCurrency;
+      })
+      .join('');
+
+    console.log(conversion);
+  };
+
   render() {
     return (
       <div className="App">
@@ -114,11 +139,27 @@ class App extends Component {
 
         <form>
           <Select
+            name="from"
             options={this.state.currencies}
             onChange={this.onChangeHandler}
             selected=""
           />
         </form>
+
+        <form>
+          <Select
+            name="to"
+            options={this.state.currencies}
+            onChange={this.onChangeHandler}
+            selected=""
+          />
+        </form>
+
+        <form>
+          <Input onChange={this.onChangeInputHandler} />
+        </form>
+
+        <Input value="20" />
 
         <ExchangeRates
           base={this.state.base}
@@ -126,9 +167,11 @@ class App extends Component {
           isFetching={this.state.isFetching}
         />
         <br />
+
         <HistoricalRates
           historicalRates={this.state.historicalRates}
           base={this.state.base}
+          toCurrency={this.state.toCurrency}
           isFetching={this.state.isFetching}
         />
       </div>
