@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import '../App.css';
-import ExchangeRates from './ExchangeRates';
-import Select from './elements/Select';
+import React, { Component } from "react";
+import "../App.css";
+import ExchangeRates from "./ExchangeRates";
+import Select from "./elements/Select";
+import HistoricalRates from "./HistoricalRates";
 
 class App extends Component {
   constructor() {
@@ -9,14 +10,15 @@ class App extends Component {
     this.state = {
       isFetching: false,
       currencies: [],
-      base: 'EUR'
+      base: "EUR",
+      historicalRates: []
     };
   }
 
   componentDidMount() {
     this.setState({ isFetching: true });
 
-    fetch('http://api.fixer.io/latest')
+    fetch("http://api.fixer.io/latest")
       .then(response => response.json())
       .then(json => {
         let rates = Object.keys(json.rates).map(function(el) {
@@ -30,6 +32,8 @@ class App extends Component {
           currencies
         });
       });
+    let date = ["2014-01-01", "2015-01-01", "2016-01-01"];
+    fetch();
   }
 
   onChangeHandler = e => {
@@ -65,12 +69,19 @@ class App extends Component {
           <Select
             options={this.state.currencies}
             onChange={this.onChangeHandler}
+            selected=""
           />
         </form>
 
         <ExchangeRates
           base={this.state.base}
           rates={this.state.rates}
+          isFetching={this.state.isFetching}
+        />
+        <br />
+        <HistoricalRates
+          historicalRates={this.state.historicalRates}
+          base={this.state.base}
           isFetching={this.state.isFetching}
         />
       </div>

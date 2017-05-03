@@ -1,16 +1,16 @@
 import React from "react";
 
-const ExchangeRates = ({ rates, isFetching, base }) => {
+const HistoricalRates = ({ historicalRates, isFetching, base }) => {
   return (
     <div className="panel panel-default">
       <div className="panel-heading">
-        {base}
+        {base} to USD
       </div>
       <div className="panel-body">
-        {isFetching ? <p>Loading...</p> : rates}
+        {isFetching ? <p>Loading...</p> : historicalRates}
       </div>
     </div>
   );
 };
 
-export default ExchangeRates;
+export default HistoricalRates;
