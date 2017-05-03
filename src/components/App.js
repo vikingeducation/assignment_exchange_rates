@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import '../App.css';
-import ExchangeRates from './ExchangeRates';
-import Select from './elements/Select';
-import HistoricalRates from './HistoricalRates';
-import Input from './elements/Input';
+import React, { Component } from "react";
+import "../App.css";
+import ExchangeRates from "./ExchangeRates";
+import Select from "./elements/Select";
+import HistoricalRates from "./HistoricalRates";
+import Input from "./elements/Input";
 
 class App extends Component {
   constructor() {
@@ -11,16 +11,17 @@ class App extends Component {
     this.state = {
       isFetching: false,
       currencies: [],
-      base: 'EUR',
-      toCurrency: 'USD',
-      historicalRates: []
+      base: "EUR",
+      toCurrency: "USD",
+      historicalRates: [],
+      convertedValue: 0
     };
   }
 
   componentDidMount() {
     this.setState({ isFetching: true });
 
-    fetch('http://api.fixer.io/latest')
+    fetch("http://api.fixer.io/latest")
       .then(response => response.json())
       .then(json => {
         let rates = Object.keys(json.rates).map(function(el) {
@@ -34,7 +35,7 @@ class App extends Component {
         });
       });
 
-    let date = ['2014-01-01', '2015-01-01', '2016-01-01'];
+    let date = ["2014-01-01", "2015-01-01", "2016-01-01"];
     let fetchPromises = [];
     let historicalRates = [];
 
@@ -60,7 +61,7 @@ class App extends Component {
   }
 
   onChangeHandler = e => {
-    if (e.target.name == 'from') {
+    if (e.target.name == "from") {
       var fromCurrency = e.target.value;
       var toCurrency = this.state.toCurrency;
     } else {
@@ -87,7 +88,7 @@ class App extends Component {
         });
       });
 
-    let date = ['2014-01-01', '2015-01-01', '2016-01-01'];
+    let date = ["2014-01-01", "2015-01-01", "2016-01-01"];
     let fetchPromises = [];
     let historicalRates = [];
 
@@ -123,11 +124,15 @@ class App extends Component {
 
     let conversion = rates
       .filter(function(el) {
-        return el.split(':')[0] == toCurrency;
+        return el.split(":")[0] == toCurrency;
       })
-      .join('');
+      .join("")
+      .split(": ")[1];
 
-    console.log(conversion);
+    let convertedValue = Number(amount) * Number(conversion);
+    this.setState({
+      convertedValue
+    });
   };
 
   render() {
@@ -159,7 +164,7 @@ class App extends Component {
           <Input onChange={this.onChangeInputHandler} />
         </form>
 
-        <Input value="20" />
+        <Input disabled value={this.state.convertedValue} />
 
         <ExchangeRates
           base={this.state.base}
