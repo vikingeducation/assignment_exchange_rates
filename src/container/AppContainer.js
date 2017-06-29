@@ -109,16 +109,30 @@ class AppContainer extends Component {
 
   onBaseCurrencyChange = (e) => {
     const newCurrency = e.target.value;
-    this.setState({ isFetchingRates: true });
+    this.setState({ 
+      isFetchingRates: true,
+      isFetchingComparisons: true
+    });
+    let rates;
 
     const url = `${BASE_URI}/latest?base=${newCurrency}`;
     fetch(url)
       .then(response => response.json())
-      .then(json => {
+      .then(data => {
+        rates = data.rates;
+        return this.getHistoricalComparisons();
+      })
+      .then(responses => {
+        return Promise.all(responses.map(res => res.json()));
+      })
+      .then(data => {
+        let historicalComparisons = this.parseHistoricalComparisons(data, this.state.comparisonCurrency);
         this.setState({
           isFetchingRates: false,
-          exchangeRates: json,
-          baseCurrency: newCurrency
+          isFetchingComparisons: false,
+          exchangeRates: rates,
+          baseCurrency: newCurrency,
+          historicalComparisons,
         });
       })
       .catch(error => {
@@ -132,6 +146,24 @@ class AppContainer extends Component {
   onComparisonCurrencyChange = (e) => {
     const newComparisonCurrency = e.target.value;
     this.setState({ isFetchingComparisons: true });
+    this.getHistoricalComparisons()
+      .then(responses => {
+        return Promise.all(responses.map(res => res.json()));
+      })
+      .then(data => {
+        let historicalComparisons = this.parseHistoricalComparisons(data, newComparisonCurrency);
+        this.setState({
+          isFetchingComparisons: false,
+          comparisonCurrency: newComparisonCurrency,
+          historicalComparisons,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          isFetchingComparisons: false,
+          error
+        });
+      });
   };
 
   render() {
