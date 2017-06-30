@@ -5,8 +5,9 @@ import Table from './elements/Table';
 
 const ExchangeRates = ({baseCurrency, allCurrencies, exchangeRates, isFetchingRates, onChange}) => {
   return(
-    <div className="col-md-6">
-      <h3>Exchange Rates for {baseCurrency}</h3>
+    <div className="col-md-4">
+      <h3>Exchange Rates for</h3>
+      <h3>{baseCurrency}</h3>
       <form>
         <InputGroup labelText="Select Base Currency">
           <Select

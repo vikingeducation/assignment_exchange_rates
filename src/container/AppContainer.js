@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import currency from 'currency.js';
 import App from "../components/App";
 import { getAllCurrencies } from "../helpers";
 const BASE_URI = 'http://api.fixer.io/';
@@ -41,6 +42,9 @@ class AppContainer extends Component {
       isFetchingComparisons: false,
       exchangeRates: null,
       historicalComparisons: null,
+      conversionRate: 0,
+      conversionAmount: 1,
+      conversionResult: 0,
       error: null
     }
   }
@@ -65,11 +69,16 @@ class AppContainer extends Component {
       })
       .then(data => {
         let historicalComparisons = this.parseHistoricalComparisons(data, this.state.comparisonCurrency);
+        let conversionRate = rates[this.state.comparisonCurrency];
+        let conversionResult = this.calculateConversionChange(this.state.conversionAmount, conversionRate);
+
         this.setState({
           isFetchingRates: false,
           isFetchingComparisons: false,
           exchangeRates: rates,
           historicalComparisons,
+          conversionRate,
+          conversionResult,
           allCurrencies
         });
       })
@@ -127,12 +136,16 @@ class AppContainer extends Component {
       })
       .then(data => {
         let historicalComparisons = this.parseHistoricalComparisons(data, this.state.comparisonCurrency);
+        let conversionRate = rates[this.state.comparisonCurrency];
+        let conversionResult = this.calculateConversionChange(this.state.conversionAmount, conversionRate);
         this.setState({
           isFetchingRates: false,
           isFetchingComparisons: false,
           exchangeRates: rates,
           baseCurrency: newCurrency,
           historicalComparisons,
+          conversionRate,
+          conversionResult
         });
       })
       .catch(error => {
@@ -143,7 +156,7 @@ class AppContainer extends Component {
       });
   }
 
-  onComparisonCurrencyChange = (e) => {
+  onComparisonCurrencyChange = e => {
     const newComparisonCurrency = e.target.value;
     this.setState({ isFetchingComparisons: true });
     this.getHistoricalComparisons()
@@ -152,10 +165,14 @@ class AppContainer extends Component {
       })
       .then(data => {
         let historicalComparisons = this.parseHistoricalComparisons(data, newComparisonCurrency);
+        let conversionRate = this.state.exchangeRates[newComparisonCurrency];
+        let conversionResult = this.calculateConversionChange(this.state.conversionAmount, conversionRate);
         this.setState({
           isFetchingComparisons: false,
           comparisonCurrency: newComparisonCurrency,
           historicalComparisons,
+          conversionRate,
+          conversionResult
         });
       })
       .catch(error => {
@@ -166,11 +183,25 @@ class AppContainer extends Component {
       });
   };
 
+  calculateConversionChange = (amount, rate) => {
+    return currency(amount).multiply(rate).value;
+  };
+
+  onConversionAmountChange = e => {
+    const newAmount = e.target.value;
+    let conversionResult = this.calculateConversionChange(newAmount, this.state.conversionRate);
+    this.setState({
+      conversionAmount: newAmount,
+      conversionResult
+    });
+  };
+
   render() {
     return(
       <App 
         onBaseCurrencyChange={this.onBaseCurrencyChange}
         onComparisonCurrencyChange={this.onComparisonCurrencyChange}
+        onConversionAmountChange={this.onConversionAmountChange}
         {...this.state}
       />
     );

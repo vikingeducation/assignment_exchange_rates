@@ -10,12 +10,15 @@ const App = (props) => {
     baseCurrency,
     comparisonCurrency,
     allCurrencies,
+    conversionAmount,
     exchangeRates,
     historicalComparisons,
     isFetchingRates,
+    isFetchingComparisons,
     onBaseCurrencyChange,
     onComparisonCurrencyChange,
-    isFetchingComparisons
+    onConversionAmountChange,
+    conversionResult
   } = props;
 
   return (
@@ -39,10 +42,12 @@ const App = (props) => {
             isFetchingComparisons={isFetchingComparisons}
             onChange={onComparisonCurrencyChange}
           />
-        </div>
-        <div className="row well">
           <CurrencyConverter 
             baseCurrency={baseCurrency}
+            comparisonCurrency={comparisonCurrency}
+            conversionAmount={conversionAmount}
+            conversionResult={conversionResult}
+            onChange={onConversionAmountChange}
           />
         </div>
       </main>

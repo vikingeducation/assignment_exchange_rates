@@ -13,8 +13,9 @@ const HistoricalComparisons = (props) => {
     onChange
   } = props;
   return(
-    <div className="col-md-6">
-      <h3>Historical Rates for {baseCurrency} to {comparisonCurrency}</h3>
+    <div className="col-md-4">
+      <h3>Historical Rates for</h3>
+      <h3>{baseCurrency} to {comparisonCurrency}</h3>
       <form>
         <InputGroup labelText="Select Comparison Currency">
           <Select
