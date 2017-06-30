@@ -4,33 +4,6 @@ import App from "../components/App";
 import { getAllCurrencies } from "../helpers";
 const BASE_URI = 'http://api.fixer.io/';
 
-/*
-
-  Container <- stateHolder
-    ExchangeRates
-      Select Base Currency: select
-      Exchange Rates List: table
-    
-    HistoricalComparisons
-      Select Comparison Currency: select
-      Historical Rates List: table
-
-    CurrencyConverter
-      Amount: input
-      Result: text
-
-
-  Main state is:
-    Base Currency
-    Comparison Currency
-    Comparison Currency value
-    Amount
-    allCurrencies
-    isFetchingRates
-    isFetchingHistoricalComparisons
-    isFetchingConversion
-*/
-
 class AppContainer extends Component {
   constructor() {
     super()
