@@ -1,9 +1,9 @@
 import React from "react";
 
-const HeaderBrand = () => {
+const HeaderBrand = ({title}) => {
   return (
     <div className="navbar-header">
-      <a className="navbar-brand" href="/">Exchange Rates</a>
+      <a className="navbar-brand" href="/">{title}</a>
     </div>
   );
 };

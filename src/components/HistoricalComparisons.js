@@ -21,6 +21,7 @@ const HistoricalComparisons = (props) => {
           <Select
             options={allCurrencies}
             onChange={onChange}
+            defaultValue="USD"
           />
         </InputGroup>
       </form>

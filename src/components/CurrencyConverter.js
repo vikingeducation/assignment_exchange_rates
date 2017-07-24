@@ -13,6 +13,7 @@ const CurrencyConverter = ({baseCurrency, comparisonCurrency, conversionAmount, 
             name="currencyAmount"
             defaultValue={conversionAmount}
             onChange={onChange}
+            type="number"
             />
           {baseCurrency} is worth {conversionResult} {comparisonCurrency}
         </p>
