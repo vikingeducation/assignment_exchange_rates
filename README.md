@@ -1,5 +1,7 @@
 # Exchange Rates Project
 
+[![Exchange Rates](http://i.imgur.com/oolSwpX.png)](http://gentle-passenger.surge.sh/)
+
 ## Technologies Used
 React, Fetch API
 
