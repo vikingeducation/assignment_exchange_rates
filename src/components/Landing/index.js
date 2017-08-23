@@ -31,7 +31,7 @@ class Landing extends PureComponent {
 	getCurrencyOptions = () => {
 		return this.currencies.map(currency => {
 			return (
-				<option value={currency} key={currency}>
+				<option value={currency}>
 					{currency}
 				</option>
 			);
