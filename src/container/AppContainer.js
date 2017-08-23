@@ -10,7 +10,9 @@ class AppContainer extends React.Component {
 		super();
 		this.state = {
 			isFetching: true,
-			latestRates: []
+			latestRates: [],
+			base: 'EUR',
+			comp: 'AUD'
 		};
 	}
 	componentDidMount() {
@@ -41,6 +43,8 @@ class AppContainer extends React.Component {
 		if (!base) return;
 		try {
 			this.setState({
+				base,
+				comp: comparison,
 				isFetching: true
 			});
 
@@ -85,9 +89,15 @@ class AppContainer extends React.Component {
 	};
 
 	render() {
-		if (this.state.isFetching) return <h2 class="text-center">Loading...</h2>;
+		if (this.state.isFetching)
+			return <h1 className="text-center loading">Loading Application...</h1>;
 		return (
-			<App getLatest={this.getLatest} latestRates={this.state.latestRates} />
+			<App
+				base={this.state.base}
+				comp={this.state.comp}
+				getLatest={this.getLatest}
+				latestRates={this.state.latestRates}
+			/>
 		);
 	}
 }

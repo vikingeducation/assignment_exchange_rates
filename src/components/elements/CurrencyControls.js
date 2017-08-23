@@ -14,7 +14,7 @@ const BaseWidget = ({ base }) =>
 	</div>;
 
 const CurrencyControlsWidget = ({
-	base,
+	value,
 	countries,
 	changeHandler,
 	label,
@@ -29,10 +29,14 @@ const CurrencyControlsWidget = ({
 							{label}:&nbsp;
 						</strong>
 					</ControlLabel>
-					<FormControl componentClass="select" onChange={changeHandler}>
+					<FormControl
+						componentClass="select"
+						value={value}
+						onChange={changeHandler}
+					>
 						{!exclude
-							? <option value={base}>
-									{base}
+							? <option key={value} value={value}>
+									{value}
 								</option>
 							: ''}
 
@@ -55,29 +59,14 @@ const DateWidget = ({ date }) =>
 	</div>;
 
 class CurrencyControls extends React.PureComponent {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			base: 'EUR',
-			comp: 'AUD'
-		};
-	}
-
 	onBaseCurrencyChange = async e => {
 		const baseCurrency = e.target.value;
-		this.setState({
-			base: baseCurrency
-		});
-		await this.props.getLatest(baseCurrency, this.state.comp);
+		this.props.getLatest(baseCurrency, this.props.comp);
 	};
 
 	onComparisonCurrencyChange = async e => {
 		const comparisonCurrency = e.target.value;
-		this.setState({
-			comp: comparisonCurrency
-		});
-		await this.props.getLatest(this.state.base, comparisonCurrency);
+		this.props.getLatest(this.props.base, comparisonCurrency);
 	};
 
 	render() {
@@ -87,15 +76,13 @@ class CurrencyControls extends React.PureComponent {
 				<div className="row">
 					<BaseWidget base={this.props.base} />
 					<CurrencyControlsWidget
-						base={this.props.base}
-						comparison={this.props.comparison}
+						value={this.props.base}
 						countries={countries}
 						changeHandler={this.onBaseCurrencyChange}
 						label="Currency"
 					/>
 					<CurrencyControlsWidget
-						base={this.props.base}
-						comparison={this.props.comparison}
+						value={this.props.comp}
 						countries={countries}
 						changeHandler={this.onComparisonCurrencyChange}
 						label="Comparison"

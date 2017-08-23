@@ -4,7 +4,6 @@ import { ListGroupItem } from 'react-bootstrap';
 class ExchangeRate extends React.PureComponent {
 	render() {
 		const { historicals } = this.props;
-		console.log(historicals);
 
 		return (
 			<ListGroupItem>
