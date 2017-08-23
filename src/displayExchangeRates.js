@@ -1,9 +1,20 @@
 import React, { Component } from "react";
 
-class DisplayRates extends Component {
-  render() {
-    return <div className="App" />;
-  }
-}
+const DisplayRates = ({ rates }) => {
+	return (
+		<table>
+			{rates.map(rate => {
+				<tr>
+					<th>
+						{rate.currency}
+					</th>
+					<td>
+						{rate.value}
+					</td>
+				</tr>;
+			})}
+		</table>
+	);
+};
 
 export default DisplayRates;

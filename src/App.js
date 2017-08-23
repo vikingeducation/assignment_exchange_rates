@@ -1,8 +1,33 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { DisplayRates } from "./displayExchangeRates";
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      rates: []
+    };
+  }
+
+  componentDidMount() {
+    fetch("http://api.fixer.io/latest")
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        const ratesArray = Object.entries(json.rates).map((key, val) => {
+          return {
+            currency: key,
+            value: val
+          };
+        });
+
+        this.setState({ rates: ratesArray });
+      });
+  }
+
   render() {
     return (
       <div className="App">
@@ -10,14 +35,10 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-
+        <DisplayRates rates={this.state.rates} />
       </div>
     );
   }
 }
 
 export default App;
-curl -i -H "Accept: application/json" "http://api.fixer.io/latest"
