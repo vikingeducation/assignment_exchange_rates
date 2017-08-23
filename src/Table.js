@@ -1,7 +1,7 @@
 import React from "react";
 
 const Table = ({ tableData }) => {
-  const { base, rates } = tableData;
+  const { base, date, rates } = tableData;
   if (!base) return null;
 
   const headerData = ["Currency", "Rate"];
@@ -32,6 +32,9 @@ const Table = ({ tableData }) => {
         <h2>
           {base}
         </h2>
+        <h3>
+          {date}
+        </h3>
         <table className="table table-striped">
           <thead>
             <tr>
