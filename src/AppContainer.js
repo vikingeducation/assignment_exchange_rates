@@ -20,28 +20,33 @@ class AppContainer extends Component {
 
   componentDidMount = () => {
     this.fetchRates(this.state.selectedCurrency);
+    this.fetchComparison(this.state.selectedCompareCurrency);
   };
 
   selectCurrency = e => {
     this.fetchRates(e.target.value);
   };
 
-  selectCompareCurrency = async e => {
+  selectCompareCurrency = e => {
+    this.fetchComparison(e.target.value);
+  };
+
+  fetchComparison = async compareCurrency => {
     try {
       let promises = compareDates.map(date => {
         return this.doTheFetch(this.state.selectedCurrency, date);
       });
-      const compare = e.target.value;
       let history = await Promise.all(promises);
       history = history.map(year => {
         return {
           Year: year.date,
-          Price: year.rates[compare]
+          Price: year.rates[compareCurrency]
         };
       });
+      console.log(history);
 
       this.setState({
-        selectedCompareCurrency: compare,
+        selectedCompareCurrency: compareCurrency,
         comparedRates: history
       });
     } catch (error) {
