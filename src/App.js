@@ -35,7 +35,7 @@ class App extends Component {
           });
         });
     } else {
-      this.getHistoricalRates();
+      this.getHistoricalRates(base);
     }
   };
 
@@ -79,11 +79,10 @@ class App extends Component {
   onHistoricalChange = e => {
     const target = e.target;
     this.setState({
-      currentHistorical: target.value === "current" ? "historical" : "current"
+      currentHistorical: target.value
+    }, () => {
+      this.getExchangeRates()
     });
-    target.value === "current"
-      ? this.getExchangeRates()
-      : this.getHistoricalRates();
   };
 
   render() {
@@ -93,6 +92,8 @@ class App extends Component {
       currencies,
       historicalOptions
     } = this.state;
+
+    currencies.unshift("Select Currency")
 
     return (
       <div className="App container">
