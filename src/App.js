@@ -10,7 +10,25 @@ class App extends Component {
       rates: []
     };
   }
+  changeParentCurrency = e => {
+    console.log(e);
+    let newUrl =
+      "http://api.fixer.io/latest?base=" + e.body.mainCurrency.toUpperCase();
+    fetch(newUrl)
+      .then(response => {
+        return response.json();
+      })
+      .then(json => {
+        const ratesArray = Object.entries(json.rates).map(item => {
+          return {
+            currency: item[0],
+            value: item[1]
+          };
+        });
 
+        this.setState({ rates: ratesArray });
+      });
+  };
   componentDidMount() {
     fetch("http://api.fixer.io/latest")
       .then(response => {
@@ -31,10 +49,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
+        <form
+          onSubmit={e => {
+            console.log(e.target);
+            this.changeParentCurrency(e);
+          }}
+        >
+          <input type="text" />
+          <button name="mainCurrency">Change Currency</button>
+        </form>
         <DisplayRates rates={this.state.rates} />
       </div>
     );
