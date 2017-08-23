@@ -28,7 +28,7 @@ const Table = ({ tableData }) => {
 
   return (
     <div className="row">
-      <div className="col-xs-4 col-xs-offset-4">
+      <div className="col-xs-12">
         <h2>
           {base}
         </h2>

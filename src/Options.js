@@ -1,13 +1,13 @@
 import React from "react";
 
-const Options = ({ onBaseChange, currencies }) => {
-  if (!currencies.length) return null;
+const Options = ({ handler, dataOptions }) => {
+  if (!dataOptions.length) return null;
   return (
-    <select onChange={onBaseChange}>
-      {currencies.map(curr => {
+    <select onChange={handler}>
+      {dataOptions.map(item => {
         return (
-          <option key={curr} value={curr}>
-            {curr}
+          <option key={item} value={item}>
+            {item}
           </option>
         );
       })}
