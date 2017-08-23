@@ -10,10 +10,10 @@ class App extends Component {
     this.state = {
       currencies: [],
       currentDate: new Date().toISOString().split("T")[0],
-      historicalOptions: ["current", "historical"],
+      historicalOptions: ["Current", "Historical"],
       tableData: [{}],
       currentBase: "EUR",
-      currentHistorical: "current"
+      currentHistorical: "Current"
     };
   }
 
@@ -22,7 +22,7 @@ class App extends Component {
   }
 
   getExchangeRates = (base = this.state.currentBase) => {
-    if (this.state.currentHistorical === "current") {
+    if (this.state.currentHistorical === "Current") {
       fetch(`http://api.fixer.io/latest?base=${base}`, { method: "GET" })
         .then(response => {
           return response.json();
@@ -49,7 +49,6 @@ class App extends Component {
     for (let i = 1; i < 4; i++) {
       years.push((Number(date.slice(0, 4)) - i).toString());
     }
-    console.log(years);
     const promises = years.map(year =>
       fetch(`http://api.fixer.io/${year}${halfDate}?base=${base}`, {
         method: "GET"
@@ -63,7 +62,6 @@ class App extends Component {
         return Promise.all(results);
       })
       .then(results => {
-        console.log(results);
         this.setState({
           tableData: results,
           currencies: Object.keys(results[0].rates)
@@ -78,11 +76,14 @@ class App extends Component {
 
   onHistoricalChange = e => {
     const target = e.target;
-    this.setState({
-      currentHistorical: target.value
-    }, () => {
-      this.getExchangeRates()
-    });
+    this.setState(
+      {
+        currentHistorical: target.value
+      },
+      () => {
+        this.getExchangeRates();
+      }
+    );
   };
 
   render() {
@@ -93,7 +94,7 @@ class App extends Component {
       historicalOptions
     } = this.state;
 
-    currencies.unshift("Select Currency")
+    currencies.unshift("Select Currency");
 
     return (
       <div className="App container">
