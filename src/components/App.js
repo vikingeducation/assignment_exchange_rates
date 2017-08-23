@@ -1,14 +1,17 @@
-import React, { Component } from "react";
-import Latest from "./Latest";
+import React from 'react';
+import Latest from './Latest';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <Latest latestRates={this.props.latestRates} />
-      </div>
-    );
-  }
+class App extends React.PureComponent {
+	render() {
+		return (
+			<div className="App">
+				<Latest
+					getLatest={this.props.getLatest}
+					latestRates={this.props.latestRates}
+				/>
+			</div>
+		);
+	}
 }
 
 export default App;

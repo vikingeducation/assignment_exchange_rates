@@ -12,13 +12,19 @@ class AppContainer extends React.Component {
 			latestRates: []
 		};
 	}
-	async componentDidMount() {
+	componentDidMount() {
+		this.getLatest('EUR');
+	}
+
+	getLatest = async base => {
+		if (!base) return;
 		try {
 			this.setState({
 				isFetching: true
 			});
 
-			let response = await fetch(FIXER_LATEST_PATH);
+			let latestPath = FIXER_LATEST_PATH + `?base=${base}`;
+			let response = await fetch(latestPath);
 			if (!response.ok) {
 				throw new Error(`${response.status} ${response.statusText}`);
 			}
@@ -36,17 +42,17 @@ class AppContainer extends React.Component {
 				latestRates
 			});
 		} catch (err) {
-			console.error(err);
-			console.log('???????');
 			this.setState({
 				isFetching: false
 			});
 		}
-	}
+	};
 
 	render() {
 		if (this.state.isFetching) return <p>Loading...</p>;
-		return <App latestRates={this.state.latestRates} />;
+		return (
+			<App getLatest={this.getLatest} latestRates={this.state.latestRates} />
+		);
 	}
 }
 
