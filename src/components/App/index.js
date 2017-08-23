@@ -8,26 +8,37 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      rates: {}
+      rates: {},
+      currency: "AUD",
+      historicRate: "USD"
     };
   }
   componentDidMount() {
     this._getLatestRates();
   }
 
-  changeBaseRate = currency => {
+  getHistoricRate=(historicRate, rates)=>{
+    const rate=rates
+  }
+
+  changeBaseRate = (e, element) => {
+    e.persist()
     const self = this;
     axios
-      .get(`http://api.fixer.io/latest?base=${currency}`)
+      .get(`http://api.fixer.io/latest?base=${e.target.value}`)
       .then(function(response) {
         self.setState({
-          rates: response.data.rates
+          rates: response.data.rates,
+          currency: e.target.value
         });
+        console.log("App line 29, state: ", self.state)
       })
       .catch(function(error) {
         console.log(error);
       });
   };
+
+
 
   _getLatestRates = () => {
     const self = this;
@@ -44,10 +55,12 @@ class App extends Component {
   };
 
   render() {
-    const { rates } = this.state;
+    const { rates, currency } = this.state;
     return (
       <div className="App">
-        <Landing rates={rates} changeBaseRate={this.changeBaseRate} />
+        <Landing rates={rates}
+        currency={currency}
+        changeBaseRate={this.changeBaseRate} />
       </div>
     );
   }
