@@ -2,13 +2,13 @@ import React from "react";
 import App from "../components/App";
 import fetch from "node-fetch";
 
-const FIXER_LATEST_PATH = "http://api.fixer.io/latest";
+const FIXER_LATEST_PATH = `http://api.fixer.io/latest`;
 
 class AppContainer extends React.Component {
   constructor() {
     super();
     this.state = {
-      isFetching: false,
+      isFetching: true,
       latestRates: []
     };
   }
@@ -32,13 +32,13 @@ class AppContainer extends React.Component {
       for (let country in json.rates) {
         latestRates.rates.push({ country, rate: json.rates[country] });
       }
-      console.log(latestRates);
       this.setState({
         isFetching: false,
         latestRates
       });
     } catch (err) {
       console.error(err);
+      console.log("???????");
       this.setState({
         isFetching: false
       });

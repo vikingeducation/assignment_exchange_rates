@@ -1,10 +1,14 @@
-import React from 'react';
-import { ListGroupItem } from 'react-bootstrap';
+import React from "react";
+import { ListGroupItem } from "react-bootstrap";
 
-const ExchangeRate = ({ country, rate }) => {
-	<ListGroupItem>
-		{country}: {rate}
-	</ListGroupItem>;
-};
+class ExchangeRate extends React.PureComponent {
+  render() {
+    return (
+      <ListGroupItem>
+        {this.props.country}: {this.props.rate}
+      </ListGroupItem>
+    );
+  }
+}
 
 export default ExchangeRate;
