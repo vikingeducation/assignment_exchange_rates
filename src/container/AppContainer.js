@@ -85,7 +85,7 @@ class AppContainer extends React.Component {
 	};
 
 	render() {
-		if (this.state.isFetching) return <p>Loading...</p>;
+		if (this.state.isFetching) return <h2 class="text-center">Loading...</h2>;
 		return (
 			<App getLatest={this.getLatest} latestRates={this.state.latestRates} />
 		);
