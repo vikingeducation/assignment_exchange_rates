@@ -14,7 +14,8 @@ class AppContainer extends Component {
       selectedCurrency: "EUR",
       selectedCompareCurrency: "USD",
       rates: [],
-      comparedRates: []
+      comparedRates: [],
+      convertAmount: 1
     };
   }
 
@@ -29,6 +30,10 @@ class AppContainer extends Component {
 
   selectCompareCurrency = e => {
     this.fetchComparison(e.target.value);
+  };
+
+  updateConversion = e => {
+    this.setState({ convertAmount: e.target.value });
   };
 
   fetchComparison = async compareCurrency => {
@@ -92,7 +97,8 @@ class AppContainer extends Component {
   render() {
     const handlers = {
       selectCurrency: this.selectCurrency,
-      selectCompareCurrency: this.selectCompareCurrency
+      selectCompareCurrency: this.selectCompareCurrency,
+      updateConversion: this.updateConversion
     };
     return <App handlers={handlers} {...this.state} />;
   }
