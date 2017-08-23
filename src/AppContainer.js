@@ -6,7 +6,7 @@ class AppContainer extends Component {
     super();
     this.state = {
       error: null,
-      rates: []
+      rates: {}
     };
   }
 
@@ -18,7 +18,7 @@ class AppContainer extends Component {
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       else {
         const json = await res.json();
-        this.setState({ rates: json.data });
+        this.setState({ rates: json.rates });
       }
     } catch (error) {
       this.handleError(error);
@@ -26,7 +26,7 @@ class AppContainer extends Component {
   }
 
   handleError = error => {
-    console.log(error);
+    console.error(error);
     this.setState({ error });
   };
 

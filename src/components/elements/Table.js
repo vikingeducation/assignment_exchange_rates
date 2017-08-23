@@ -1,26 +1,26 @@
 import React from "react";
 
 const Table = ({ headers, rows }) =>
-  <table class="table table-striped">
+  <table className="table table-striped">
     <thead>
       <tr>
         {headers.map(name =>
-          <th>
+          <th key={name}>
             {name}
           </th>
         )}
       </tr>
     </thead>
     <tbody>
-      {rows.map(row => {
-        <tr>
+      {rows.map((row, i) =>
+        <tr key={`row${i}`}>
           {headers.map(name =>
-            <td>
-              {rows[name]}
+            <td key={name}>
+              {row[name]}
             </td>
           )}
-        </tr>;
-      })}
+        </tr>
+      )}
     </tbody>
   </table>;
 
