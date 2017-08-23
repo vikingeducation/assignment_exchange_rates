@@ -8,32 +8,40 @@ class App extends Component {
     super();
     this.state = {
       rates: [],
-      historalRates: [],
-      currentCurrency: "EUR"
+      historicalRates: [],
+      currentCurrency: "EUR",
+      comparisonCurrency: "USD"
     };
   }
+
   historicalRate = e => {
+    e.preventDefault();
+    const hist = e.target.historicalCurrency.value.toUpperCase();
     let newUrl =
       "http://api.fixer.io/2000-01-03?base=" +
       this.state.currentCurrency +
-      "&symbols=USD";
+      "&symbols=" +
+      hist;
     let historicalData = [];
     fetch(newUrl)
       .then(response => {
+        console.log("got a response");
         return response.json();
       })
       .then(json => {
+        console.log(json.rates);
         if (json.rates) {
           let newObj = {
-            currency: Object.keys(json.rates)[0],
-            value: json.rates.USD
+            currency: json.date,
+            value: json.rates[hist]
           };
           historicalData.push(newObj);
         }
         let newUrl =
           "http://api.fixer.io/2001-01-03?base=" +
           this.state.currentCurrency +
-          "&symbols=USD";
+          "&symbols=" +
+          hist;
         return fetch(newUrl);
       })
       .then(response => {
@@ -42,15 +50,16 @@ class App extends Component {
       .then(json => {
         if (json.rates) {
           let newObj = {
-            currency: Object.keys(json.rates)[0],
-            value: json.rates.USD
+            currency: json.date,
+            value: json.rates[hist]
           };
           historicalData.push(newObj);
         }
         let newUrl =
           "http://api.fixer.io/2002-01-03?base=" +
           this.state.currentCurrency +
-          "&symbols=USD";
+          "&symbols=" +
+          hist;
         return fetch(newUrl);
       })
       .then(response => {
@@ -59,14 +68,21 @@ class App extends Component {
       .then(json => {
         if (json.rates) {
           let newObj = {
-            currency: Object.keys(json.rates)[0],
-            value: json.rates.USD
+            currency: json.date,
+            value: json.rates[hist]
           };
           historicalData.push(newObj);
         }
-        this.setState({ historalRates: historicalData });
+
+        if (historicalData.length) {
+          this.setState({
+            historicalRates: historicalData,
+            historicalCurrency: hist
+          });
+        }
       });
   };
+
   getCurrency = currency => {
     let newUrl = "http://api.fixer.io/latest?base=" + currency;
     fetch(newUrl)
@@ -112,12 +128,25 @@ class App extends Component {
           <input type="text" name="mainCurrency" />
           <button>Change Currency</button>
         </form>
-        <button onClick={this.historicalRate} />
+        <form
+          onSubmit={e => {
+            this.historicalRate(e);
+          }}
+        >
+          <input type="text" name="historicalCurrency" />
+          <button>Historical Rates</button>
+        </form>
         <h3>
           Current Currency: {this.state.currentCurrency}
         </h3>
-        <DisplayRates rates={this.state.historicalRate} />
-        <DisplayRates rates={this.state.rates} />
+        <div className="row">
+          <div className="col-xs-6">
+            <DisplayRates rates={this.state.rates} />
+          </div>
+          <div className="col-xs-6">
+            <DisplayRates rates={this.state.historicalRates} />
+          </div>
+        </div>
       </div>
     );
   }
