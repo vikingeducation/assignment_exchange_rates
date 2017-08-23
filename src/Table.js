@@ -1,0 +1,41 @@
+import React from "react";
+
+const Table = ({tableData}) => {
+  const {base, date, rates} = tableData;
+  if (!base)
+    return null
+
+  const headerData = ["Currency", "Rate"];
+  let tableHeader = headerData.map((data) => {
+    return (
+      <th>{data}</th>
+    )
+  })
+
+  const tableDataRows = Object.keys(rates).map((key) => {
+    return (
+      <tr>
+        <td>{key}</td>
+        <td>{rates[key]}</td>
+      </tr>
+    )
+  })
+
+  return (
+    <div className="row">
+      <div className="col-xs-4 col-xs-offset-4">
+        <h2>{base}</h2>
+        <table className="table table-striped">
+          <thead>
+            <tr>{tableHeader}</tr>
+          </thead>
+          <tbody>
+            {tableDataRows}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+export default Table;
