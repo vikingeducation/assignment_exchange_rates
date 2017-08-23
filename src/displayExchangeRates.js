@@ -3,7 +3,7 @@ import React, { Component } from "react";
 const DisplayRates = ({ rates }) => {
 	return (
 		<table>
-			{rates.map(rate => {
+			{rates.map(rate =>
 				<tr>
 					<th>
 						{rate.currency}
@@ -11,8 +11,8 @@ const DisplayRates = ({ rates }) => {
 					<td>
 						{rate.value}
 					</td>
-				</tr>;
-			})}
+				</tr>
+			)}
 		</table>
 	);
 };

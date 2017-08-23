@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { DisplayRates } from "./displayExchangeRates";
+import DisplayRates from "./displayExchangeRates";
 
 class App extends Component {
   constructor() {
@@ -17,10 +17,10 @@ class App extends Component {
         return response.json();
       })
       .then(json => {
-        const ratesArray = Object.entries(json.rates).map((key, val) => {
+        const ratesArray = Object.entries(json.rates).map(item => {
           return {
-            currency: key,
-            value: val
+            currency: item[0],
+            value: item[1]
           };
         });
 
