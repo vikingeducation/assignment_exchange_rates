@@ -5,6 +5,7 @@ import Showable from "./elements/Showable";
 import ExchangeRates from "./ExchangeRates";
 import Select from "./elements/Select";
 import Input from "./elements/Input";
+import bigMacData from "../big_mac_2017_01";
 
 const App = ({
   error,
@@ -15,10 +16,20 @@ const App = ({
   comparedRates,
   convertAmount
 }) => {
+  let usdRate;
   const rate = rates.reduce((acc, rate) => {
+    if (rate.Country === "USD") {
+      usdRate = rate.Rate;
+    }
     return rate.Country === selectedCompareCurrency ? rate.Rate : acc;
   }, null);
   const result = rate * convertAmount;
+  const burgerPrice = bigMacData.data.map(country => {
+    return {
+      Country: country.Country,
+      Price: (country.dollar_price / usdRate).toFixed(2)
+    };
+  });
 
   return (
     <div className="container">
@@ -52,6 +63,12 @@ const App = ({
         <h4>
           Result: {result}
         </h4>
+      </div>
+      <div className="col-sm-4">
+        <h3>
+          Big Mac Price in {selectedCurrency}
+        </h3>
+        <ExchangeRates rates={burgerPrice} headers={["Country", "Price"]} />
       </div>
     </div>
   );
