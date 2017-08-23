@@ -5,15 +5,9 @@ import ExchangeRate from './elements/ExchangeRate';
 
 class Latest extends React.PureComponent {
 	render() {
-		console.log(this.props);
 		return (
 			<ListGroup>
-				<CurrencyControls
-					base={this.props.base}
-					comp={this.props.comp}
-					getLatest={this.props.getLatest}
-					{...this.props.latestRates}
-				/>
+				<CurrencyControls {...this.props} />
 				<div className="container">
 					{this.props.latestRates.rates.map(latestRate =>
 						<ExchangeRate {...latestRate} key={latestRate.country} />

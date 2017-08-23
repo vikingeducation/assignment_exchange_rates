@@ -70,25 +70,27 @@ class CurrencyControls extends React.PureComponent {
 	};
 
 	render() {
-		const countries = this.props.rates.map(rate => rate.country);
+		const { base, comp } = this.props;
+		const { date, rates } = this.props.latestRates;
+		const countries = rates.map(rate => rate.country);
 		return (
 			<ListGroupItem>
 				<div className="row">
-					<BaseWidget base={this.props.base} />
+					<BaseWidget base={base} />
 					<CurrencyControlsWidget
-						value={this.props.base}
+						value={base}
 						countries={countries}
 						changeHandler={this.onBaseCurrencyChange}
 						label="Currency"
 					/>
 					<CurrencyControlsWidget
-						value={this.props.comp}
+						value={comp}
 						countries={countries}
 						changeHandler={this.onComparisonCurrencyChange}
 						label="Comparison"
 						exclude={true}
 					/>
-					<DateWidget date={this.props.date} />
+					<DateWidget date={date} />
 				</div>
 			</ListGroupItem>
 		);
