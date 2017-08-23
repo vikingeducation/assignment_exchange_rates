@@ -17,28 +17,26 @@ class App extends Component {
     this._getLatestRates();
   }
 
-  getHistoricRate=(historicRate, rates)=>{
-    const rate=rates
-  }
+  getHistoricRate = (historicRate, rates) => {
+    return rates.filter(r => Object.keys(r)[0] === historicRate)[0];
+  };
 
   changeBaseRate = (e, element) => {
-    e.persist()
+    const rate = e.target.value;
     const self = this;
+
     axios
-      .get(`http://api.fixer.io/latest?base=${e.target.value}`)
+      .get(`http://api.fixer.io/latest?base=${rate}`)
       .then(function(response) {
         self.setState({
           rates: response.data.rates,
-          currency: e.target.value
+          currency: rate
         });
-        console.log("App line 29, state: ", self.state)
       })
       .catch(function(error) {
         console.log(error);
       });
   };
-
-
 
   _getLatestRates = () => {
     const self = this;
@@ -58,9 +56,12 @@ class App extends Component {
     const { rates, currency } = this.state;
     return (
       <div className="App">
-        <Landing rates={rates}
-        currency={currency}
-        changeBaseRate={this.changeBaseRate} />
+        <Landing
+          rates={rates}
+          currency={currency}
+          changeBaseRate={this.changeBaseRate}
+          getHistoricRate={this.getHistoricRate}
+        />
       </div>
     );
   }
