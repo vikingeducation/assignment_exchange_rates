@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
-    "fetch": "^1.1.0",
     "jquery": "^3.2.1",
+    "node-fetch": "^1.7.2",
     "popper": "^1.0.0",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.2",
