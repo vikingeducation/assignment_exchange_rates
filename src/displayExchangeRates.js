@@ -1,8 +1,15 @@
 import React, { Component } from "react";
 
-const DisplayRates = ({ rates }) => {
+const DisplayRates = ({ rates, title }) => {
   return (
     <table className="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="2">
+            {title}
+          </th>
+        </tr>
+      </thead>
       <tbody>
         {rates.map(rate =>
           <tr key={rate.currency}>

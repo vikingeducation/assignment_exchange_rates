@@ -18,6 +18,10 @@ class App extends Component {
     e.preventDefault();
     let quantityToExchange = Number(e.target.quantity.value);
 
+    if (this.state.currentCurrency === this.state.comparisonCurrency) {
+      return this.setState({ lastExchange: quantityToExchange.toFixed(2) });
+    }
+
     let newUrl =
       "http://api.fixer.io/latest?base=" +
       this.state.currentCurrency +
@@ -164,41 +168,49 @@ class App extends Component {
             this.changeParentCurrency(e);
           }}
         >
-          <input type="text" name="mainCurrency" />
-          <button>Change Currency</button>
+          <input type="text" name="mainCurrency" />&nbsp;&nbsp;
+          <button className="btn btn-primary">Change Currency</button>
         </form>
+        <hr />
         <form
           onSubmit={e => {
             this.historicalRate(e);
           }}
         >
-          <input type="date" name="date0" />
-          <input type="date" name="date1" />
-          <input type="date" name="date2" />
-          <input type="text" name="historicalCurrency" />
-          <button>Historical Rates</button>
+          <input type="date" name="date0" />&nbsp;&nbsp;
+          <input type="date" name="date1" />&nbsp;&nbsp;
+          <input type="date" name="date2" />&nbsp;&nbsp;
+          <input type="text" name="historicalCurrency" />&nbsp;&nbsp;
+          <button className="btn btn-primary">Historical Rates</button>
         </form>
+        <hr />
         <form
           onSubmit={e => {
             this.exchangeRate(e);
           }}
         >
-          <input type="text" name="quantity" />
-          <button>Exchange</button>
+          <input type="text" name="quantity" />&nbsp;&nbsp;
+          <button className="btn btn-primary">Exchange</button>
         </form>
         <h1>
           {this.state.lastExchange}
         </h1>
         <h3>
-          Current Currency: {this.state.currentCurrency}
+          Current Currency: {this.state.currentCurrency}&nbsp;&nbsp;&nbsp;
           Comparison Currency: {this.state.comparisonCurrency}
         </h3>
         <div className="row">
           <div className="col-xs-6">
-            <DisplayRates rates={this.state.rates} />
+            <DisplayRates
+              rates={this.state.rates}
+              title="Current Conversion Rates"
+            />
           </div>
           <div className="col-xs-6">
-            <DisplayRates rates={this.state.historicalRates} />
+            <DisplayRates
+              rates={this.state.historicalRates}
+              title="Historical Conversion Rates"
+            />
           </div>
         </div>
       </div>
