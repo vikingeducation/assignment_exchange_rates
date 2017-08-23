@@ -1,7 +1,7 @@
 import React from "react";
 
 const Table = ({ headers, rows }) =>
-  <table className="table table-striped">
+  <table className="table table-striped table-condensed">
     <thead>
       <tr>
         {headers.map(name =>
