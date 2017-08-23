@@ -1,3 +1,5 @@
+import React from "react";
+
 const Select = props => {
   const { options, ...restOfProps } = props;
   const optionElements = options.map(option =>

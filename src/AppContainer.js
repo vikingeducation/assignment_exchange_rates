@@ -6,24 +6,32 @@ class AppContainer extends Component {
     super();
     this.state = {
       error: null,
+      selectedCurrency: "EUR",
       rates: {}
     };
   }
 
-  async componentDidMount() {
+  componentDidMount = () => {
+    this.fetchRates(this.state.selectedCurrency);
+  };
+
+  selectCurrency = e => {
+    this.fetchRates(e.target.value);
+  };
+
+  fetchRates = async currency => {
     try {
-      this.setState({ isFetching: true });
-      const res = await fetch("https://api.fixer.io/latest");
+      const res = await fetch(`https://api.fixer.io/latest?base=${currency}`);
 
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       else {
         const json = await res.json();
-        this.setState({ rates: json.rates });
+        this.setState({ rates: json.rates, selectCurrency: currency });
       }
     } catch (error) {
       this.handleError(error);
     }
-  }
+  };
 
   handleError = error => {
     console.error(error);
@@ -31,7 +39,7 @@ class AppContainer extends Component {
   };
 
   render() {
-    const handlers = {};
+    const handlers = { selectCurrency: this.selectCurrency };
     return <App handlers={handlers} {...this.state} />;
   }
 }
