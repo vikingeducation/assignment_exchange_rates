@@ -1,17 +1,14 @@
 import React from "react";
 
-const Table = ({ tableData }) => {
-  const { base, date, rates } = tableData;
+const Table = ({ base, date, rates }) => {
   if (!base) return null;
 
   const headerData = ["Currency", "Rate"];
-  let tableHeader = headerData.map(data => {
-    return (
-      <th key={data}>
-        {data}
-      </th>
-    );
-  });
+  let tableHeader = headerData.map(data =>
+    <th key={data}>
+      {data}
+    </th>
+  );
 
   const tableDataRows = Object.keys(rates).map(key => {
     return (

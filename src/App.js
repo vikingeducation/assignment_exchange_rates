@@ -45,28 +45,21 @@ class App extends Component {
   ) => {
     let newTableData = [];
     const halfDate = date.slice(4);
-    const years = [];
-    for (let i = 1; i < 4; i++) {
-      years.push((Number(date.slice(0, 4)) - i).toString());
-    }
+    const years = Array(3)
+      .fill(0)
+      .map((_, i) => (Number(date.slice(0, 4)) - i).toString());
+
     const promises = years.map(year =>
       fetch(`http://api.fixer.io/${year}${halfDate}?base=${base}`, {
         method: "GET"
-      })
+      }).then(r => r.json())
     );
-    Promise.all(promises)
-      .then(results => {
-        results = results.map(r => {
-          return r.json();
-        });
-        return Promise.all(results);
-      })
-      .then(results => {
-        this.setState({
-          tableData: results,
-          currencies: Object.keys(results[0].rates)
-        });
+    Promise.all(promises).then(results => {
+      this.setState({
+        tableData: results,
+        currencies: Object.keys(results[0].rates)
       });
+    });
   };
 
   onBaseChange = e => {
@@ -80,9 +73,7 @@ class App extends Component {
       {
         currentHistorical: target.value
       },
-      () => {
-        this.getExchangeRates();
-      }
+      () => this.getExchangeRates()
     );
   };
 

@@ -10,7 +10,7 @@ const TableContainer = ({ tableData }) => {
     <div className="row">
       {tableData.map(data =>
         <div key={data.date} className={`col-xs-4 col-xs-offset-${offset}`}>
-          <Table tableData={data} />
+          <Table {...data} />
         </div>
       )}
     </div>
