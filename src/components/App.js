@@ -10,7 +10,8 @@ const App = ({
   rates,
   handlers,
   selectedCurrency,
-  selectedCompareCurrency
+  selectedCompareCurrency,
+  comparedRates
 }) =>
   <div className="container">
     <JumbotronFluid heading="xChange Rates" lead="Use ALL THE MONEY" />
@@ -20,19 +21,20 @@ const App = ({
     <div className="col-sm-4">
       <h3>Select a Currency</h3>
       <Select
-        options={Object.keys(rates)}
+        options={rates.map(rate => rate.Country)}
         onChange={handlers.selectCurrency}
         value={selectedCurrency}
       />
-      <ExchangeRates rates={rates} />
+      <ExchangeRates rates={rates} headers={["Country", "Rate"]} />
     </div>
     <div className="col-sm-4">
       <h3>Compare it to another currency, Across THE SPAN OF TIME</h3>
       <Select
-        options={Object.keys(rates)}
+        options={rates.map(rate => rate.Country)}
         onChange={handlers.selectCompareCurrency}
         value={selectedCompareCurrency}
       />
+      <ExchangeRates rates={comparedRates} headers={["Year", "Rate"]} />
     </div>
   </div>;
 

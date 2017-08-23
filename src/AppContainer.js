@@ -13,8 +13,8 @@ class AppContainer extends Component {
       error: null,
       selectedCurrency: "EUR",
       selectedCompareCurrency: "USD",
-      rates: {},
-      comparedRates: {}
+      rates: [],
+      comparedRates: []
     };
   }
 
@@ -40,10 +40,9 @@ class AppContainer extends Component {
       history = history.map(year => {
         return {
           Year: year.date,
-          Price: year.rates[compareCurrency]
+          Rate: year.rates[compareCurrency]
         };
       });
-      console.log(history);
 
       this.setState({
         selectedCompareCurrency: compareCurrency,
@@ -72,7 +71,13 @@ class AppContainer extends Component {
     try {
       let rates = await this.doTheFetch(currency);
       if (rates) {
-        this.setState({ rates: rates.rates, selectedCurrency: currency });
+        rates = Object.entries(rates.rates).map(([Country, Rate]) => {
+          return {
+            Country: Country,
+            Rate: Rate
+          };
+        });
+        this.setState({ rates, selectedCurrency: currency });
       }
     } catch (error) {
       this.handleError(error);
