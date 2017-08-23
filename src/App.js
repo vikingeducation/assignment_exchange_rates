@@ -10,15 +10,45 @@ class App extends Component {
       rates: [],
       historicalRates: [],
       currentCurrency: "EUR",
-      comparisonCurrency: "USD"
+      comparisonCurrency: "USD",
+      lastExchange: 0
     };
   }
+  exchangeRate = e => {
+    e.preventDefault();
+    let quantityToExchange = Number(e.target.quantity.value);
 
+    let newUrl =
+      "http://api.fixer.io/latest?base=" +
+      this.state.currentCurrency +
+      "&symbols=" +
+      this.state.comparisonCurrency;
+    fetch(newUrl)
+      .then(response => {
+        console.log("got a response");
+        return response.json();
+      })
+      .then(json => {
+        let newValue = (json.rates[this.state.comparisonCurrency] *
+          quantityToExchange).toFixed(2);
+
+        this.setState({ lastExchange: newValue });
+      });
+    e.target.reset();
+  };
   historicalRate = e => {
     e.preventDefault();
-    const hist = e.target.historicalCurrency.value.toUpperCase();
+    const hist =
+      e.target.historicalCurrency.value.toUpperCase() ||
+      this.state.comparisonCurrency;
+    let date0 = e.target.date0.value || "2000-01-03";
+    let date1 = e.target.date1.value || "2001-01-03";
+    let date2 = e.target.date2.value || "2002-01-03";
+    e.target.reset();
     let newUrl =
-      "http://api.fixer.io/2000-01-03?base=" +
+      "http://api.fixer.io/" +
+      date0 +
+      "?base=" +
       this.state.currentCurrency +
       "&symbols=" +
       hist;
@@ -38,7 +68,9 @@ class App extends Component {
           historicalData.push(newObj);
         }
         let newUrl =
-          "http://api.fixer.io/2001-01-03?base=" +
+          "http://api.fixer.io/" +
+          date1 +
+          "?base=" +
           this.state.currentCurrency +
           "&symbols=" +
           hist;
@@ -56,7 +88,9 @@ class App extends Component {
           historicalData.push(newObj);
         }
         let newUrl =
-          "http://api.fixer.io/2002-01-03?base=" +
+          "http://api.fixer.io/" +
+          date2 +
+          "?base=" +
           this.state.currentCurrency +
           "&symbols=" +
           hist;
@@ -77,7 +111,8 @@ class App extends Component {
         if (historicalData.length) {
           this.setState({
             historicalRates: historicalData,
-            historicalCurrency: hist
+            comparisonCurrency: hist,
+            lastExchange: 0
           });
         }
       });
@@ -98,7 +133,11 @@ class App extends Component {
             };
           });
 
-          this.setState({ rates: ratesArray, currentCurrency: currency });
+          this.setState({
+            rates: ratesArray,
+            currentCurrency: currency,
+            lastExchange: 0
+          });
         }
       });
   };
@@ -133,11 +172,26 @@ class App extends Component {
             this.historicalRate(e);
           }}
         >
+          <input type="date" name="date0" />
+          <input type="date" name="date1" />
+          <input type="date" name="date2" />
           <input type="text" name="historicalCurrency" />
           <button>Historical Rates</button>
         </form>
+        <form
+          onSubmit={e => {
+            this.exchangeRate(e);
+          }}
+        >
+          <input type="text" name="quantity" />
+          <button>Exchange</button>
+        </form>
+        <h1>
+          {this.state.lastExchange}
+        </h1>
         <h3>
           Current Currency: {this.state.currentCurrency}
+          Comparison Currency: {this.state.comparisonCurrency}
         </h3>
         <div className="row">
           <div className="col-xs-6">
