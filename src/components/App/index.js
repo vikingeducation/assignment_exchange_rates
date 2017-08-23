@@ -1,41 +1,53 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 //import logo from './logo.svg';
-import './App.css';
-import Landing from '../Landing'
-import axios from 'axios'
+import "./App.css";
+import Landing from "../Landing";
+import axios from "axios";
 
 class App extends Component {
   constructor() {
     super();
-    this.state={
+    this.state = {
       rates: {}
-    }
+    };
   }
   componentDidMount() {
-     this.getLatestRates() 
+    this._getLatestRates();
   }
 
-  getLatestRates = ()=>{
-    const self=this
-    axios.get('http://api.fixer.io/latest')
-    .then(function (response) {
-     // const latestRates=response.data.rates
-      console.log("response.data", response.data.rates)
-      self.setState({
-        rates: response.data.rates
+  changeBaseRate = currency => {
+    const self = this;
+    axios
+      .get(`http://api.fixer.io/latest?base=${currency}`)
+      .then(function(response) {
+        self.setState({
+          rates: response.data.rates
+        });
       })
-      
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  _getLatestRates = () => {
+    const self = this;
+    axios
+      .get("http://api.fixer.io/latest")
+      .then(function(response) {
+        self.setState({
+          rates: response.data.rates
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
 
   render() {
-    console.log("State", this.state)
+    const { rates } = this.state;
     return (
       <div className="App">
-       <Landing />
+        <Landing rates={rates} changeBaseRate={this.changeBaseRate} />
       </div>
     );
   }
