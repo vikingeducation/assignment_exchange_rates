@@ -17,8 +17,23 @@ class App extends Component {
     this._getLatestRates();
   }
 
-  getHistoricRate = (historicRate, rates) => {
-    return rates.filter(r => Object.keys(r)[0] === historicRate)[0];
+  getHistoricRate = (e, element) => {
+    const rate = e.target.value;
+    const self = this;
+    axios
+      .get(`http://api.fixer.io/latest?base=${this.state.historicRate}`)
+      
+
+  
+      .then(function(response) {
+        self.setState({
+          rates: response.data.rates,
+          currency: rate
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   };
 
   changeBaseRate = (e, element) => {

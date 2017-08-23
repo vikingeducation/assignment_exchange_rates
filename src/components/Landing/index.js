@@ -6,17 +6,13 @@ class Landing extends PureComponent {
 		super(props);
 
 		this.currencies = [];
-		this.objectCurrencies = [];
 	}
 
 	getExchangeRates = () => {
 		return Object.keys(this.props.rates).map(key => {
-			let pair = {};
 			let value = this.props.rates[key];
 
 			this.currencies.push(key);
-			pair[key] = value;
-			this.objectCurrencies.push(pair);
 
 			return (
 				<li key={key}>
@@ -29,29 +25,48 @@ class Landing extends PureComponent {
 	};
 
 	getCurrencyOptions = () => {
-		return this.currencies.map(currency => {
+		return this.currencies.map((currency, index) => {
 			return (
-				<option value={currency}>
+				<option value={currency} key={index}>
 					{currency}
 				</option>
 			);
 		});
 	};
 
+	getSingleHistoricRate = () =>{
+	
+	}
+
 	render() {
 		console.log(this.props);
 		return (
 			<div>
 				<div className="exchange-box">
-					<h1> Historical Exchange Rates </h1>
+					<h1> Latest Exchange Rates </h1>
 					<ul className="exchange-list">
 						{this.getExchangeRates()}
 					</ul>
 				</div>
+				<p>Current Base Rate Currency: {this.props.currency}</p>
 				<select
 					value={this.props.currency}
 					name="Select Currency"
 					onChange={this.props.changeBaseRate}
+				>
+					{this.getCurrencyOptions()}
+				</select>
+				<div className="exchange-box">
+					<h1> Historic Exchange Rates </h1>
+					<ul className="exchange-list">
+						{this.getExchangeRates()}
+					</ul>
+				</div>
+				<p>Historic Rate Currency: {this.props.historicRate}</p>
+				<select
+					value={this.props.historicRate}
+					name="Select Currency"
+					onChange={this.props.changeHistoricRate}
 				>
 					{this.getCurrencyOptions()}
 				</select>
