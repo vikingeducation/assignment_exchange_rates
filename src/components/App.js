@@ -5,7 +5,13 @@ import Showable from "./elements/Showable";
 import ExchangeRates from "./ExchangeRates";
 import Select from "./elements/Select";
 
-const App = ({ error, rates, handlers, selectedCurrency }) =>
+const App = ({
+  error,
+  rates,
+  handlers,
+  selectedCurrency,
+  selectedCompareCurrency
+}) =>
   <div className="container">
     <JumbotronFluid heading="xChange Rates" lead="Use ALL THE MONEY" />
     <Showable show={error}>

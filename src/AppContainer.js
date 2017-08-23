@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import App from "./components/App";
 
+const compareDates = Array(10).fill(true).map((thing, index) => {
+  const year = 2017 - index;
+  return `${year}-01-01`;
+});
+
 class AppContainer extends Component {
   constructor() {
     super();
@@ -8,7 +13,8 @@ class AppContainer extends Component {
       error: null,
       selectedCurrency: "EUR",
       selectedCompareCurrency: "USD",
-      rates: {}
+      rates: {},
+      comparedRates: {}
     };
   }
 
@@ -19,20 +25,38 @@ class AppContainer extends Component {
   selectCurrency = e => {
     this.fetchRates(e.target.value);
   };
-  selectCompareCurrency = e => {
-    return bananas;
+
+  selectCompareCurrency = async e => {
+    try {
+      let promises = compareDates.map(date => {
+        return this.doTheFetch(this.state.selectedCurrency, date);
+      });
+      const compare = e.target.value;
+      let history = await Promise.all(promises);
+      history = history.map(year => {
+        return {
+          Year: year.date,
+          Price: year.rates[compare]
+        };
+      });
+
+      this.setState({
+        selectedCompareCurrency: compare,
+        comparedRates: history
+      });
+    } catch (error) {
+      this.handleError(error);
+    }
   };
 
   async doTheFetch(currency, date = new Date().toISOString().slice(0, 10)) {
     try {
-      const res = await fetch(`https://api.fixer.io/latest?base=${currency}`);
-
+      const res = await fetch(`https://api.fixer.io/${date}?base=${currency}`);
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       else {
-        const json = await res.json();
-        let rates = json.rates;
-        rates[currency] = 1;
-        return rates;
+        let json = await res.json();
+        json.rates[currency] = 1;
+        return json;
       }
     } catch (error) {
       this.handleError(error);
@@ -43,7 +67,7 @@ class AppContainer extends Component {
     try {
       let rates = await this.doTheFetch(currency);
       if (rates) {
-        this.setState({ rates, selectedCurrency: currency });
+        this.setState({ rates: rates.rates, selectedCurrency: currency });
       }
     } catch (error) {
       this.handleError(error);
@@ -56,7 +80,10 @@ class AppContainer extends Component {
   };
 
   render() {
-    const handlers = { selectCurrency: this.selectCurrency };
+    const handlers = {
+      selectCurrency: this.selectCurrency,
+      selectCompareCurrency: this.selectCompareCurrency
+    };
     return <App handlers={handlers} {...this.state} />;
   }
 }
