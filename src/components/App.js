@@ -40,29 +40,33 @@ const App = ({
       <div className="col-sm-4">
         <h3>Select a Currency</h3>
         <Select
-          options={rates.map(rate => rate.Country)}
+          options={rates.map(rate => rate.Country).sort()}
           onChange={handlers.selectCurrency}
           value={selectedCurrency}
         />
         <ExchangeRates rates={rates} headers={["Country", "Rate"]} />
       </div>
       <div className="col-sm-4">
-        <h3>Compare it to another currency, Across THE SPAN OF TIME</h3>
+        <h3>Compare it to another currency</h3>
         <Select
-          options={rates.map(rate => rate.Country)}
+          options={rates.map(rate => rate.Country).sort()}
           onChange={handlers.selectCompareCurrency}
           value={selectedCompareCurrency}
         />
-        <ExchangeRates rates={comparedRates} headers={["Year", "Rate"]} />
-      </div>
-      <div className="col-sm-4">
-        <h3>
-          Convert from {selectedCurrency} to {selectedCompareCurrency}
-        </h3>
-        <Input value={convertAmount} onChange={handlers.updateConversion} />
         <h4>
-          Result: {result}
+          Convert {selectedCurrency} to {selectedCompareCurrency}
         </h4>
+        <Input
+          min="0"
+          type="number"
+          value={convertAmount}
+          onChange={handlers.updateConversion}
+        />
+        <h5>
+          Result: {result}
+        </h5>
+        <h4>Historical Prices:</h4>
+        <ExchangeRates rates={comparedRates} headers={["Year", "Rate"]} />
       </div>
       <div className="col-sm-4">
         <h3>

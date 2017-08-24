@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import App from "./components/App";
 
-const compareDates = Array(10).fill(true).map((thing, index) => {
+const COMPARE_DATES = Array(10).fill(true).map((thing, index) => {
   const year = 2017 - index;
   return `${year}-01-01`;
 });
@@ -19,40 +19,73 @@ class AppContainer extends Component {
     };
   }
 
+  // Given an array of promises that resolve to objects containing updated
+  // state: resolve those promises, merge the objects, and set state
+  updateState = promises => {
+    Promise.all(promises)
+      .then(opts => {
+        // [{this: true}, {that: false}] => {this: true, that: false}
+        this.setState(opts.reduce((acc, opt) => Object.assign(acc, opt), {}));
+      })
+      .catch(error => this.handleError(error));
+  };
+
   componentDidMount = () => {
-    this.fetchRates(this.state.selectedCurrency);
-    this.fetchComparison(this.state.selectedCompareCurrency);
+    this.updateState([
+      this.fetchRates(this.state.selectedCurrency),
+      this.fetchComparison(this.state.selectedCompareCurrency)
+    ]);
   };
 
   selectCurrency = e => {
-    this.fetchRates(e.target.value);
+    this.updateState([
+      this.fetchRates(e.target.value),
+      this.fetchComparison(this.state.selectedCompareCurrency, e.target.value)
+    ]);
   };
 
   selectCompareCurrency = e => {
-    this.fetchComparison(e.target.value);
+    this.updateState([this.fetchComparison(e.target.value)]);
   };
 
   updateConversion = e => {
-    this.setState({ convertAmount: e.target.value });
+    this.updateState([this.setState({ convertAmount: e.target.value })]);
   };
 
-  fetchComparison = async compareCurrency => {
+  fetchComparison = async (compareCurrency, againstCurrency) => {
     try {
-      let promises = compareDates.map(date => {
-        return this.doTheFetch(this.state.selectedCurrency, date);
-      });
-      let history = await Promise.all(promises);
-      history = history.map(year => {
-        return {
-          Year: year.date,
-          Rate: year.rates[compareCurrency]
-        };
-      });
+      againstCurrency = againstCurrency || this.state.selectedCurrency;
+      let history = await Promise.all(
+        COMPARE_DATES.map(async date => {
+          const year = await this.doTheFetch(againstCurrency, date);
+          return {
+            Year: year.date,
+            Rate: year.rates[compareCurrency]
+          };
+        })
+      );
 
-      this.setState({
+      return {
         selectedCompareCurrency: compareCurrency,
         comparedRates: history
-      });
+      };
+    } catch (error) {
+      this.handleError(error);
+    }
+  };
+
+  fetchRates = async currency => {
+    try {
+      let rates = await this.doTheFetch(currency);
+      if (rates) {
+        rates = Object.entries(rates.rates).map(([Country, Rate]) => {
+          return {
+            Country: Country,
+            Rate: Rate
+          };
+        });
+        return { rates, selectedCurrency: currency };
+      }
     } catch (error) {
       this.handleError(error);
     }
@@ -71,23 +104,6 @@ class AppContainer extends Component {
       this.handleError(error);
     }
   }
-
-  fetchRates = async currency => {
-    try {
-      let rates = await this.doTheFetch(currency);
-      if (rates) {
-        rates = Object.entries(rates.rates).map(([Country, Rate]) => {
-          return {
-            Country: Country,
-            Rate: Rate
-          };
-        });
-        this.setState({ rates, selectedCurrency: currency });
-      }
-    } catch (error) {
-      this.handleError(error);
-    }
-  };
 
   handleError = error => {
     console.error(error);
