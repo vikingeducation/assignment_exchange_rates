@@ -5,26 +5,22 @@ const Table = ({ tableData }) => {
   if (!base) return null;
 
   const headerData = ["Currency", "Rate"];
-  let tableHeader = headerData.map(data => {
-    return (
-      <th key={data}>
-        {data}
-      </th>
-    );
-  });
+  let tableHeader = headerData.map(data =>
+    <th key={data}>
+      {data}
+    </th>
+  );
 
-  const tableDataRows = Object.keys(rates).map(key => {
-    return (
-      <tr key={key}>
-        <td>
-          {key}
-        </td>
-        <td>
-          {rates[key]}
-        </td>
-      </tr>
-    );
-  });
+  const tableDataRows = Object.keys(rates).map(key =>
+    <tr key={key}>
+      <td>
+        {key}
+      </td>
+      <td>
+        {rates[key]}
+      </td>
+    </tr>
+  );
 
   return (
     <div className="row">
