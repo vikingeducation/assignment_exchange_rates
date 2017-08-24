@@ -59,7 +59,7 @@ class AppContainer extends Component {
         COMPARE_DATES.map(async date => {
           const year = await this.doTheFetch(againstCurrency, date);
           return {
-            Year: year.date,
+            Date: year.date,
             Rate: year.rates[compareCurrency]
           };
         })
@@ -84,6 +84,13 @@ class AppContainer extends Component {
             Rate: Rate
           };
         });
+
+        rates.sort((a, b) => {
+          if (a.Country < b.Country) return -1;
+          else if (a.Country > b.Country) return 1;
+          else return 1;
+        });
+
         return { rates, selectedCurrency: currency };
       }
     } catch (error) {
