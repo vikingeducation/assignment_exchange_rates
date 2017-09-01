@@ -38,7 +38,7 @@ class App extends Component {
       date.getDate() > 9 ? date.getDate().toString() : `0${date.getDate()}`;
 
     const promises = years.map(year =>
-      fetch(`http://api.fixer.io/${year}-${month}-${day}?base=${currency}`, {
+      fetch(`https://api.fixer.io/${year}-${month}-${day}?base=${currency}`, {
         method: "GET"
       }).then(r => r.json())
     );
