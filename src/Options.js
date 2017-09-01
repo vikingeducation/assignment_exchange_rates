@@ -1,9 +1,12 @@
 import React from "react";
 
-const Options = ({ handler, dataOptions }) => {
+const Options = ({ label, handler, dataOptions }) => {
   if (!dataOptions.length) return null;
   return (
     <div className="form-group form-inline">
+      <label>
+        {label}
+      </label>
       <select className="form-control" onChange={handler}>
         {dataOptions.map(item => {
           return (

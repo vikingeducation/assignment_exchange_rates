@@ -8,12 +8,13 @@ class App extends Component {
     super();
 
     this.state = {
-      currencies: [],
-      currentDate: new Date().toISOString().split("T")[0],
-      historicalOptions: ["Current", "Historical"],
-      tableData: [{}],
-      currentBase: "EUR",
-      currentHistorical: "Current"
+      currency: "AUD",
+      currencyOptions: [],
+      date: new Date(),
+      dateYearOptions: new Array(5).fill(0).map((_, i) => 2017 - i),
+      previousYears: 0,
+      previousYearsOptions: new Array(5).fill(0).map((_, i) => i),
+      tableData: [{}]
     };
   }
 
@@ -21,81 +22,85 @@ class App extends Component {
     this.getExchangeRates();
   }
 
-  getExchangeRates = (base = this.state.currentBase) => {
-    if (this.state.currentHistorical === "Current") {
-      fetch(`http://api.fixer.io/latest?base=${base}`, { method: "GET" })
-        .then(response => {
-          return response.json();
-        })
-        .then(json => {
-          this.setState({
-            tableData: [json],
-            currencies: Object.keys(json.rates),
-            currentBase: base
-          });
-        });
-    } else {
-      this.getHistoricalRates(base);
-    }
-  };
-
-  getHistoricalRates = (
-    base = this.state.currentBase,
-    date = this.state.currentDate
+  getExchangeRates = (
+    currency = this.state.currency,
+    date = this.state.date,
+    previousYears = this.state.previousYears
   ) => {
-    let newTableData = [];
-    const halfDate = date.slice(4);
-    const years = Array(3)
+    const years = Array(previousYears + 1)
       .fill(0)
-      .map((_, i) => (Number(date.slice(0, 4)) - i).toString());
+      .map((_, i) => (date.getFullYear() - i).toString());
+
+    const month =
+      date.getMonth() > 9 ? date.getMonth().toString() : `0${date.getMonth()}`;
+
+    const day =
+      date.getDate() > 9 ? date.getDate().toString() : `0${date.getDate()}`;
 
     const promises = years.map(year =>
-      fetch(`http://api.fixer.io/${year}${halfDate}?base=${base}`, {
+      fetch(`http://api.fixer.io/${year}-${month}-${day}?base=${currency}`, {
         method: "GET"
       }).then(r => r.json())
     );
     Promise.all(promises).then(results => {
+      console.log(results);
+      if (!this.state.currencyOptions.length) {
+        this.setState({
+          currencyOptions: ["AUD", ...Object.keys(results[0].rates)]
+        });
+      }
+
       this.setState({
-        tableData: results,
-        currencies: Object.keys(results[0].rates)
+        tableData: results
       });
     });
   };
 
-  onBaseChange = e => {
+  onCurrencyChange = e => {
     const target = e.target;
-    this.getExchangeRates(target.value);
+    this.setState({ currency: target.value }, () => this.getExchangeRates());
   };
 
-  onHistoricalChange = e => {
+  onDateChange = e => {
     const target = e.target;
-    this.setState(
-      {
-        currentHistorical: target.value
-      },
-      () => this.getExchangeRates()
+    this.state.date.setFullYear(Number(target.value));
+    this.setState({ date: this.state.date }, () => this.getExchangeRates());
+  };
+
+  onPreviousYearsChange = e => {
+    const target = e.target;
+    this.setState({ previousYears: Number(target.value) }, () =>
+      this.getExchangeRates()
     );
   };
 
   render() {
     const {
-      currentHistorical,
       tableData,
-      currencies,
-      historicalOptions
+      currencyOptions,
+      dateYearOptions,
+      previousYearsOptions
     } = this.state;
-
-    currencies.unshift("Select Currency");
 
     return (
       <div className="App container">
         <div className="App-header">
           <h2>Welcome to Our Currency Converter</h2>
         </div>
-        <Options dataOptions={currencies} handler={this.onBaseChange} />
         <Options
-          dataOptions={historicalOptions}
-          handler={this.onHistoricalChange}
+          label={"Currency Options: "}
+          dataOptions={currencyOptions}
+          handler={this.onCurrencyChange}
+        />
+        <Options
+          label={"Year Options: "}
+          dataOptions={dateYearOptions}
+          handler={this.onDateChange}
+        />
+        <Options
+          label={"Previous Years Options: "}
+          dataOptions={previousYearsOptions}
+          handler={this.onPreviousYearsChange}
         />
         <TableContainer tableData={tableData} />
       </div>

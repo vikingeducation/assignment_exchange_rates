@@ -12,7 +12,7 @@ const Table = ({ base, date, rates }) => {
 
   const tableDataRows = Object.keys(rates).map(key => {
     return (
-      <tr key={key}>
+      <tr key={`${key}${rates[key]}`}>
         <td>
           {key}
         </td>
