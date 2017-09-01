@@ -15,8 +15,6 @@ To run this application on your own, follow these steps:
   2. run "npm i" in the root of the project to obtain libraries
   3. run "npm start" from the root of the project
 
-4. The key technologies used
-
 Emphasized Technologies:
   1. React
 
