@@ -8,12 +8,10 @@ Link for running this application on heroku:
 
 https://currency-exchange-rates-react.herokuapp.com/
 
+Application Instructions:
 
-To run this application on your own, follow these steps:
+To use the app, simply change one of the selection options: "Currency Options", "Year Options", or "Previous Years Options". Based upon the options selected, the correct information with appropriate number of tables will display.
 
-  1. Clone this repo from github
-  2. run "npm i" in the root of the project to obtain libraries
-  3. run "npm start" from the root of the project
 
 Emphasized Technologies:
   1. React
