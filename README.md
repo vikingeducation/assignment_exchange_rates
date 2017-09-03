@@ -8,7 +8,7 @@ Link for running this application on heroku:
 
 https://currency-exchange-rates-react.herokuapp.com/
 
-Application Instructions:
+Application Use:
 
 To use the app, simply change one of the selection options: "Currency Options", "Year Options", or "Previous Years Options". Based upon the options selected, the correct information with appropriate number of tables will display.
 
@@ -22,4 +22,4 @@ One of my first React projects and I'm already falling in love with the componen
 
 When using react, used fetch to get the currency exchange rate info from the fixer.io API which was interesting to play with. Each time currency was data selected, it was mapped onto an array (because there was the option to select multiple years), so we wrapped the mapped array in a Promise.all
 
-Lastly, I personally enjoyed the structure in which when a selection option was pressed, it set off a handler which then ran the getExchangeRates function, thus changing the overall state of App.js, which in turn rerendered the tables. Not sure if this would work well in a deeply nested structure. I feel like it's bad practice to pass a handler through many layers.
+Lastly, I personally enjoyed the structure in which when a selection option was pressed, it set off a handler which then ran the getExchangeRates function, thus changing the overall state of App.js, which in turn rerendered the tables. Not sure if this would work well in a deeply nested structure. I feel like it's awkward to pass a handler through many layers.
