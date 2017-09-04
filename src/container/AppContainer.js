@@ -72,7 +72,6 @@ class AppContainer extends React.Component {
       };
       let obj = { country: this.state.comp, rate: json.rates[this.state.comp] };
       latestRates.rates.push(obj);
-      console.log(latestRates);
       this.setState({
         isFetching: false,
         latestRates
