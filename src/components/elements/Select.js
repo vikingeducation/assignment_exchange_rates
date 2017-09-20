@@ -1,0 +1,22 @@
+import React from "react";
+
+const Select = props => {
+  const { options, ...restOfProps } = props;
+  const optionElements = options.map(option => (
+    <option key={option} value={option}>
+      {option}
+    </option>
+  ));
+  optionElements.unshift(
+    <option selected disabled={true} key="A" value="">
+      Select Currency
+    </option>
+  );
+  return (
+    <select className="form-control" {...restOfProps}>
+      {optionElements}
+    </select>
+  );
+};
+
+export default Select;
