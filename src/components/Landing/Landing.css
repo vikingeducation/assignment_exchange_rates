@@ -1,0 +1,10 @@
+.exchange-list {
+	list-style-type: none;
+}
+
+.exchange-box {
+	width: 300px;
+	height: 500px;
+	overflow-y: scroll;
+	border: 1px solid black;
+}
