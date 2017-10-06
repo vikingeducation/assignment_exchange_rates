@@ -1,9 +1,15 @@
 import React, { Component } from "react";
 import CurrencyRatesTable from "./CurrencyRatesTable";
+import BaseCurrencyForm from "./BaseCurrencyForm";
 
 class CurrencyRatesTableContainer extends Component {
   render() {
-    return <div />;
+    return (
+      <section>
+        <BaseCurrencyForm {...this.props} />
+        <CurrencyRatesTable {...this.props} />
+      </section>
+    );
   }
 }
 

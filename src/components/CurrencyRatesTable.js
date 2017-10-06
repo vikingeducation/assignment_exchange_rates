@@ -1,9 +1,6 @@
 import React, { Component } from "react";
+import Table from "./elements/Table";
 
-class CurrenyRatesTable extends Component {
-  render() {
-    return <div />;
-  }
-}
+const CurrencyRatesTable = props => <Table {...props} />;
 
-export default CurrenyRatesTable;
+export default CurrencyRatesTable;
