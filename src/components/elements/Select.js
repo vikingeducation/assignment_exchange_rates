@@ -1,11 +1,21 @@
 import React from "react";
 
 const Select = props => {
-  const { isFetching, baseCurrency, convertedCurrency } = props;
+  const {
+    isFetching,
+    baseCurrency,
+    convertedCurrency,
+    switch_currency
+  } = props;
   const classNames = `form-control ${props.class}`;
 
   return (
-    <select className={classNames} {...props}>
+    <select
+      className={classNames}
+      {...props}
+      value={baseCurrency}
+      onChange={switch_currency}
+    >
       <option key="0" value={baseCurrency}>
         {baseCurrency}
       </option>
