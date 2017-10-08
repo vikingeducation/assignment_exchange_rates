@@ -3,7 +3,7 @@ import Select from "./elements/Select";
 import Button from "./elements/Button";
 
 const BaseCurrencyForm = props => {
-  const { onSubmit } = props;
+  const { onSubmit, newCurrency } = props;
 
   return (
     <form className="container" id="ChooseBaseCurrency" onSubmit={onSubmit}>
@@ -11,6 +11,7 @@ const BaseCurrencyForm = props => {
         className="form-control"
         name="baseCurrency"
         form="ChooseBaseCurrency"
+        newCurrency={newCurrency}
         {...props}
       />
       <input className="form-control" type="date" name="rateDate" />

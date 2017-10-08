@@ -6,16 +6,20 @@ const Table = props => {
 
   return (
     <table>
-      <tr>
-        <th>Currency</th>
-        <th>Units per {baseCurrency}</th>
-        <th>{baseCurrency} per Unit</th>
-      </tr>
-      <tr>
-        <td>{convertedCurrency}</td>
-        <td>{Converter(baseValue, exchangeRate).exchangeValue}</td>
-        <td>{Converter(baseValue, exchangeRate).reverseExchangeValue}</td>
-      </tr>
+      <thead>
+        <tr>
+          <th>Currency</th>
+          <th>Units per {baseCurrency}</th>
+          <th>{baseCurrency} per Unit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{convertedCurrency}</td>
+          <td>{Converter(baseValue, exchangeRate).exchangeValue}</td>
+          <td>{Converter(baseValue, exchangeRate).reverseExchangeValue}</td>
+        </tr>
+      </tbody>
     </table>
   );
 };

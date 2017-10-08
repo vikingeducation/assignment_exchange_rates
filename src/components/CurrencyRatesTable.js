@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Table from "./elements/Table";
 
 const CurrencyRatesTable = props => <Table {...props} />;

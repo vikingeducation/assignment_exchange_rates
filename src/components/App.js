@@ -5,20 +5,29 @@ import JumbotronFluid from "./elements/JumbotronFluid";
 
 class App extends Component {
   constructor() {
-    super(),
-      (this.state = {
-        isFetching: false,
-        baseCurrency: "EUR",
-        baseValue: 1,
-        exchangeRate: 0.8,
-        convertedValue: "",
-        convertedCurrency: "USD"
-      });
+    super();
+    this.state = {
+      isFetching: false,
+      baseCurrency: "USD",
+      baseValue: 1,
+      exchangeRate: 0.8,
+      convertedValue: "",
+      convertedCurrency: "EUR"
+    };
   }
+  newCurrency = e => {
+    console.log("NEW CURRENCY", e.target.value);
+    this.setState({
+      baseCurrency: e.target.value
+    });
+  };
   populateCurrencyTable = e => {
-    console.log(e.target);
+    e.preventDefault();
+    console.log("AAAAAAA", e.target);
+    console.log("Value", e.target.value);
   };
   render() {
+    console.log("this");
     const {
       isFetching,
       baseCurrency,
@@ -37,6 +46,7 @@ class App extends Component {
           convertedValue={convertedValue}
           convertedCurrency={convertedCurrency}
           onSubmit={this.populateCurrencyTable}
+          newCurrency={this.newCurrency}
         />
         <CurrencyConverterContainer
           baseCurrency={baseCurrency}
