@@ -34,10 +34,9 @@ class App extends Component {
     this.setState({ isFetching: true });
     this.getRates();
   }
-  populateCurrencyTable = e => {
-    e.preventDefault();
-    // something with this.state.rates
-  };
+  shouldComponentUpdate() {
+    return this.state.isFetching !== false;
+  }
 
   switch_currency = e => {
     e.preventDefault();
@@ -50,8 +49,8 @@ class App extends Component {
         })
       );
     }).then(() => {
-      console.log("hit");
-      console.log("RAAATES", this.state.rates);
+      //console.log("hit");
+      //console.log("RAAATES", this.state.rates);
       this.setState({ isFetching: true });
       this.getRates();
     });
@@ -60,8 +59,18 @@ class App extends Component {
   setDate = e => {
     //console.log("date-target", e.target);
     //console.log("date-target.value", e.target.value);
-    this.setState({
-      date: e.target.value
+
+    return new Promise((resolve, reject) => {
+      resolve(
+        this.setState({
+          date: e.target.value
+        })
+      );
+    }).then(() => {
+      //console.log("hit");
+      //console.log("RAAATES", this.state.rates);
+      this.setState({ isFetching: true });
+      this.getRates();
     });
   };
   render() {

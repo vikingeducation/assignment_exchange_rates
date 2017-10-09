@@ -3,3 +3,15 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.currency_table {
+  width: 70%;
+  margin: 2rem auto;
+  max-height: 15rem;
+  overflow: auto;
+}
+
+#ChooseBaseCurrency {
+  width: 50%;
+  margin: 3rem auto;
+}
