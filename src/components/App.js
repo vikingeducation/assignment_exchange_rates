@@ -100,8 +100,6 @@ class App extends Component {
           exchangeRate={exchangeRate}
           convertedValue={convertedValue}
           convertedCurrency={convertedCurrency}
-          onSubmit={this.populateCurrencyTable}
-          switch_currency={this.switch_currency}
           setDate={this.setDate}
           rates={rates}
         />

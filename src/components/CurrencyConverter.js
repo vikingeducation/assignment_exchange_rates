@@ -1,9 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
+import Converter from "./elements/Converter";
 
-class CurrencyConverter extends Component {
-  render() {
-    return <div />;
-  }
-}
+const CurrencyConverter = () => {
+  return <div />;
+};
 
 export default CurrencyConverter;
