@@ -1,17 +1,20 @@
 import React from "react";
 
 const Select = props => {
-  const {
-    isFetching,
-    baseCurrency,
-    convertedCurrency,
-    switch_currency
-  } = props;
-  const classNames = `form-control ${props.class}`;
-
+  const { baseCurrency, rates, switch_currency } = props;
+  //gets currencies from rates object
+  let currenciesArray = Object.keys(rates);
+  //console.log("log rates select", rates);
+  const currenciesOptions = currenciesArray.map((currency, i) => {
+    return (
+      <option key={i + 1} value={currency}>
+        {currency}
+      </option>
+    );
+  });
   return (
     <select
-      className={classNames}
+      className="form-control"
       {...props}
       value={baseCurrency}
       onChange={switch_currency}
@@ -19,9 +22,7 @@ const Select = props => {
       <option key="0" value={baseCurrency}>
         {baseCurrency}
       </option>
-      <option key="1" value={convertedCurrency}>
-        {convertedCurrency}
-      </option>
+      {currenciesOptions}
     </select>
   );
 };
