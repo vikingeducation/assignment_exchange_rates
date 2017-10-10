@@ -58,9 +58,12 @@ class CurrencyConverterContainer extends Component {
             convertingRate: rate
           },
           () => {
+            let outcome =
+              this.state.converterBaseValue * this.state.convertingRate;
+            let length = this.state.convertedBaseValue + 3;
+            outcome = outcome.toFixed(3);
             this.setState({
-              convertingOutcome:
-                this.state.converterBaseValue * this.state.convertingRate
+              convertingOutcome: outcome
             });
           }
         );

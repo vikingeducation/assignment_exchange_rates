@@ -9,35 +9,67 @@ body {
   margin: 2rem auto;
   max-height: 15rem;
   overflow: auto;
+  font-size: 1.2rem;
+}
+.currency_table * {
+  margin: 0 auto;
+}
+.currency_table th {
+  width: 1%;
+}
+#ChooseBaseCurrency {
+  width: 90%;
+  text-align: center;
 }
 
-#ChooseBaseCurrency {
-  width: 50%;
-  margin: 3rem auto;
+#ChooseBaseCurrency * {
+  width: 30%;
+  margin: 0.5rem 3rem;
+  display: inline-block;
+  font-size: 1.5rem;
+}
+@media (max-width: 865px) {
+  #ChooseBaseCurrency * {
+    width: 60%;
+    margin: 1rem 3rem;
+    display: inline-block;
+    font-size: 1.5rem;
+  }
+  .currency_table {
+    width: 92%;
+    margin: 1rem auto;
+    max-height: fit-content;
+    font-size: 1rem;
+  }
 }
 
 section h1 {
   width: 50%;
-  margin: 3rem auto;
+  margin: 5rem auto;
   text-decoration: none;
+  background-color: #9fbcdf;
+  outline: 38px solid #9fbcdf;
 }
 
 .converter_wrapper {
   text-align: center;
+  margin-top: 3rem;
 }
 
 #currencyConverterForm {
-  outline: 1px solid gray;
-  padding-top: 0.5rem;
+  outline: 1px solid #d9d8d8;
+  padding: 0.5rem;
+  margin-bottom: 8rem;
 }
 
 #currencyConverterForm input,
 #currencyConverterForm select {
-  width: 5rem;
+  width: 8rem;
   height: 2.5rem;
   margin: 0.5rem 1.5rem;
 }
-.converter_get_input {
+.converter_get_input,
+.outcome {
   display: flex;
   flex-wrap: wrap;
   width: fit-content;
@@ -59,5 +91,14 @@ section h1 {
 
 .rate p {
   margin: 0 2rem;
+  font-size: 2rem;
+}
+
+.outcome {
+  border: 2px solid #6ec2ba;
+  margin: 2rem auto;
+}
+.outcome p {
+  width: 10rem;
   font-size: 2rem;
 }
