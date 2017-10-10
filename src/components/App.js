@@ -23,7 +23,6 @@ class App extends Component {
     )
       .then(response => response.json())
       .then(json => {
-        console.log("RAATES", json.rates);
         this.setState({
           rates: json.rates,
           isFetching: false
