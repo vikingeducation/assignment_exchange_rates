@@ -3,8 +3,14 @@ import Select from "./elements/Select";
 import Button from "./elements/Button";
 
 const BaseCurrencyForm = props => {
-  const { rates, baseCurrency, switch_currency, setDate, date } = props;
-  console.log(rates);
+  const {
+    rates,
+    baseCurrency,
+    switch_currency,
+    setDate,
+    date,
+    currenciesArray
+  } = props;
   return (
     <form className="container" id="ChooseBaseCurrency">
       <Select
@@ -12,7 +18,7 @@ const BaseCurrencyForm = props => {
         name="baseCurrency"
         form="ChooseBaseCurrency"
         handleSwitch={switch_currency}
-        rates={rates}
+        data={currenciesArray}
         baseValue={baseCurrency}
       />
       <input

@@ -3,15 +3,15 @@ import CurrencyConverterForm from "./CurrencyConverterForm";
 
 class CurrencyConverterContainer extends Component {
   constructor(props) {
-    super(props),
-      (this.state = {
-        isFetching: false,
-        converterBaseCurrency: "USD",
-        converterBaseValue: 1,
-        convertedCurrency: "EUR",
-        convertedValue: "",
-        converterExchangeRate: 0.0
-      });
+    super(props);
+    this.state = {
+      isFetching: false,
+      converterBaseCurrency: "USD",
+      converterBaseValue: 1,
+      convertedCurrency: "EUR",
+      convertedValue: "",
+      converterExchangeRate: 0.0
+    };
   }
   baseCurrencyInput = e => {
     let input = e.target.value;
@@ -27,24 +27,14 @@ class CurrencyConverterContainer extends Component {
         return response.json();
       })
       .then(json => {
-        console.log("Calculator Fetch", json.rates[converted]);
+        //console.log("Calculator Fetch", json.rates[converted]);
         this.setState({
           isFetching: false,
           converterExchangeRate: json.rates[converted]
         });
       });
   };
-  selectCurrency = e => {
-    //console.log("select-target", e.target);
-    //console.log("select-target.value", e.target.value);
-    return new Promise((resolve, reject) => {
-      resolve(
-        this.setState({
-          converterBaseCurrency: e.target.value
-        })
-      );
-    });
-  };
+
   render() {
     const {
       converterBaseCurrency,
@@ -59,10 +49,14 @@ class CurrencyConverterContainer extends Component {
         <CurrencyConverterForm
           baseCurrencyInput={this.baseCurrencyInput}
           selectCurrency={this.selectCurrency}
+          converterBaseValue={converterBaseValue}
+          convertedValue={convertedValue}
+          converterExchangeRate={converterExchangeRate}
         />
       </section>
     );
   }
 }
+``;
 
 export default CurrencyConverterContainer;

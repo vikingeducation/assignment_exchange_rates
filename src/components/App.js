@@ -18,7 +18,6 @@ class App extends Component {
       });
   }
   getRates = () => {
-    console.log("hit");
     fetch(
       `http://api.fixer.io/${this.state.date}?base=${this.state.baseCurrency}`
     )
@@ -76,7 +75,6 @@ class App extends Component {
     });
   };
   render() {
-    console.log("this");
     const {
       baseCurrency,
       baseValue,
@@ -86,7 +84,8 @@ class App extends Component {
       rates,
       date
     } = this.state;
-    console.log("RATES Passed", rates);
+    const currenciesArray = Object.keys(rates);
+    //console.log("RATES Passed", rates);
     return (
       <div className="wrapper">
         <JumbotronFluid heading="Currency Converter" />
@@ -97,6 +96,7 @@ class App extends Component {
           setDate={this.setDate}
           date={date}
           rates={rates}
+          currenciesArray={currenciesArray}
         />
         <CurrencyConverterContainer />
       </div>

@@ -1,16 +1,14 @@
 import React from "react";
 
 const Select = props => {
-  //const { baseCurrency, rates, switch_currency } = props;
-  const { baseValue, handleSwitch, rates } = props;
+  const { baseValue, handleSwitch, data } = props;
 
-  //gets currencies from rates object
-  let currenciesArray = Object.keys(rates);
-  //console.log("log rates select", rates);
-  const currenciesOptions = currenciesArray.map((currency, i) => {
+  //gets keys from dataObject
+  //console.log("DAATA", data);
+  const optionsList = data.map((item, i) => {
     return (
-      <option key={i + 1} value={currency}>
-        {currency}
+      <option key={i + 1} value={item}>
+        {item}
       </option>
     );
   });
@@ -24,7 +22,7 @@ const Select = props => {
       <option key="0" value={baseValue}>
         {baseValue}
       </option>
-      {currenciesOptions}
+      {optionsList}
     </select>
   );
 };
