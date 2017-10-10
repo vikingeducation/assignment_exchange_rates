@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Input from "./elements/Input";
-import ConverterBaseCurrencySelector from "./ConverterBaseCurrencySelector";
-import ConverterConvertedCurrencySelector from "./ConverterConvertedCurrencySelector";
+import CurrencyConverterForm from "./CurrencyConverterForm";
+import CurrencyConverterOutput from "./CurrencyConverterOutput";
 
 class CurrencyConverterContainer extends Component {
   constructor(props) {
@@ -10,7 +10,9 @@ class CurrencyConverterContainer extends Component {
       converterBaseCurrency: "USD",
       convertedCurrency: "EUR",
       converterBaseValue: 1,
-      currenciesArray: []
+      currenciesArray: [],
+      convertingRate: 1,
+      convertingOutcome: 0
     };
   }
 
@@ -38,6 +40,32 @@ class CurrencyConverterContainer extends Component {
   };
   //another api call to get rates for selected currencies
   //will take base cuurency and the converted currency
+
+  handleClick = e => {
+    e.preventDefault();
+    this.setState({
+      isFetching: true
+    });
+    fetch(
+      `http://api.fixer.io/latest?base=${this.state
+        .converterBaseCurrency}&symbols=${this.state.convertedCurrency}`
+    )
+      .then(response => response.json())
+      .then(json => {
+        let rate = Object.values(json.rates)[0];
+        this.setState(
+          {
+            convertingRate: rate
+          },
+          () => {
+            this.setState({
+              convertingOutcome:
+                this.state.converterBaseValue * this.state.convertingRate
+            });
+          }
+        );
+      });
+  };
   baseCurrencyInput = e => {
     let input = e.target.value;
     this.setState({ converterBaseValue: input });
@@ -55,29 +83,27 @@ class CurrencyConverterContainer extends Component {
       converterBaseCurrency,
       convertedCurrency,
       converterBaseValue,
-      currenciesArray
+      currenciesArray,
+      convertingRate,
+      convertingOutcome
     } = this.state;
     console.log("rendered");
     return (
       <section className="converter_wrapper">
+        <h1>Currency Calculator</h1>
         <form className="container" id="currencyConverterForm">
-          <Input
-            name="converterBaseCurrency"
-            form="CurrencyConverterForm"
-            value={converterBaseValue}
-            onChange={this.baseCurrencyInput}
+          <CurrencyConverterForm
+            {...this.state}
+            baseCurrencyInput={this.baseCurrencyInput}
+            handleClick={this.handleClick}
+            selectBaseCurrency={this.selectBaseCurrency}
+            selectConvertedCurrency={this.selectConvertedCurrency}
           />
-          <ConverterBaseCurrencySelector
-            converterBaseCurrency={converterBaseCurrency}
-            selectCurrency={this.selectBaseCurrency}
-            currenciesArray={currenciesArray}
-          />
-          <p id="converter_to">to</p>
-          <ConverterConvertedCurrencySelector
-            convertedCurrency={convertedCurrency}
-            currenciesArray={currenciesArray}
-            selectCurrency={this.selectConvertedCurrency}
-          />
+          <div className="rate">
+            <p>Rate:</p>
+            <p>{convertingRate}</p>
+          </div>
+          <CurrencyConverterOutput {...this.state} />
         </form>
         {/*
         input up

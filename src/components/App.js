@@ -97,6 +97,7 @@ class App extends Component {
           rates={rates}
           currenciesArray={currenciesArray}
         />
+        <hr />
         <CurrencyConverterContainer />
       </div>
     );
