@@ -18,11 +18,13 @@ class App extends Component {
       });
   }
   getRates = () => {
+    console.log("hit");
     fetch(
       `http://api.fixer.io/${this.state.date}?base=${this.state.baseCurrency}`
     )
       .then(response => response.json())
       .then(json => {
+        console.log("RAATES", json.rates);
         this.setState({
           rates: json.rates,
           isFetching: false
@@ -95,14 +97,7 @@ class App extends Component {
           date={date}
           rates={rates}
         />
-        <CurrencyConverterContainer
-          baseCurrency={baseCurrency}
-          exchangeRate={exchangeRate}
-          convertedValue={convertedValue}
-          convertedCurrency={convertedCurrency}
-          setDate={this.setDate}
-          rates={rates}
-        />
+        <CurrencyConverterContainer />
       </div>
     );
   }
