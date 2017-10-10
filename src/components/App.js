@@ -5,53 +5,100 @@ import JumbotronFluid from "./elements/JumbotronFluid";
 
 class App extends Component {
   constructor() {
-    super();
-    this.state = {
-      isFetching: false,
-      baseCurrency: "USD",
-      baseValue: 1,
-      exchangeRate: 0.8,
-      convertedValue: "",
-      convertedCurrency: "EUR"
-    };
+    super(),
+      (this.state = {
+        isFetching: false,
+        baseCurrency: "USD",
+        baseValue: 1,
+        exchangeRate: 0.8,
+        convertedValue: "",
+        convertedCurrency: "EUR",
+        rates: [],
+        date: new Date().toISOString().slice(0, 10)
+      });
   }
-  newCurrency = e => {
-    console.log("NEW CURRENCY", e.target.value);
-    this.setState({
-      baseCurrency: e.target.value
+  getRates = () => {
+    console.log("hit");
+    fetch(
+      `http://api.fixer.io/${this.state.date}?base=${this.state.baseCurrency}`
+    )
+      .then(response => response.json())
+      .then(json => {
+        console.log("RAATES", json.rates);
+        this.setState({
+          rates: json.rates,
+          isFetching: false
+        });
+      });
+  };
+  componentDidMount() {
+    // Before performing the fetch, set isFetching to true
+    this.setState({ isFetching: true });
+    this.getRates();
+  }
+  shouldComponentUpdate() {
+    return this.state.isFetching !== false;
+  }
+
+  switch_currency = e => {
+    e.preventDefault();
+    //console.log("select-target", e.target);
+    //console.log("select-target.value", e.target.value);
+    return new Promise((resolve, reject) => {
+      resolve(
+        this.setState({
+          baseCurrency: e.target.value
+        })
+      );
+    }).then(() => {
+      //console.log("hit");
+      //console.log("RAAATES", this.state.rates);
+      this.setState({ isFetching: true });
+      this.getRates();
     });
   };
-  populateCurrencyTable = e => {
-    e.preventDefault();
-    console.log("AAAAAAA", e.target);
-    console.log("Value", e.target.value);
+
+  setDate = e => {
+    //console.log("date-target", e.target);
+    //console.log("date-target.value", e.target.value);
+
+    return new Promise((resolve, reject) => {
+      resolve(
+        this.setState({
+          date: e.target.value
+        })
+      );
+    }).then(() => {
+      //console.log("hit");
+      //console.log("RAAATES", this.state.rates);
+      this.setState({ isFetching: true });
+      this.getRates();
+    });
   };
   render() {
     console.log("this");
     const {
-      isFetching,
       baseCurrency,
       baseValue,
       exchangeRate,
       convertedValue,
-      convertedCurrency
+      convertedCurrency,
+      rates,
+      date
     } = this.state;
+    console.log("RATES Passed", rates);
     return (
       <div className="wrapper">
         <JumbotronFluid heading="Currency Converter" />
         <CurrencyRatesTableContainer
           baseCurrency={baseCurrency}
-          baseValue={baseValue}
-          exchangeRate={exchangeRate}
-          convertedValue={convertedValue}
-          convertedCurrency={convertedCurrency}
           onSubmit={this.populateCurrencyTable}
-          newCurrency={this.newCurrency}
+          switch_currency={this.switch_currency}
+          setDate={this.setDate}
+          date={date}
+          rates={rates}
         />
-        <CurrencyConverterContainer
-          baseCurrency={baseCurrency}
-          convertedcurrency={convertedCurrency}
-        />
+        <CurrencyConverterContainer />
       </div>
     );
   }

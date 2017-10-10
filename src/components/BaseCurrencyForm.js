@@ -3,20 +3,26 @@ import Select from "./elements/Select";
 import Button from "./elements/Button";
 
 const BaseCurrencyForm = props => {
-  const { onSubmit, newCurrency } = props;
-
+  const { rates, baseCurrency, switch_currency, setDate, date } = props;
+  console.log(rates);
   return (
-    <form className="container" id="ChooseBaseCurrency" onSubmit={onSubmit}>
+    <form className="container" id="ChooseBaseCurrency">
       <Select
         className="form-control"
         name="baseCurrency"
         form="ChooseBaseCurrency"
-        newCurrency={newCurrency}
-        {...props}
+        handleSwitch={switch_currency}
+        rates={rates}
+        baseValue={baseCurrency}
       />
-      <input className="form-control" type="date" name="rateDate" />
+      <input
+        className="form-control"
+        type="date"
+        name="rateDate"
+        value={date}
+        onChange={setDate}
+      />
       <br />
-      <Button type="submit" color="primary" />
     </form>
   );
 };
