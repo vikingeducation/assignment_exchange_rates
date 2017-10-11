@@ -11,7 +11,7 @@ class CurrencyConverterContainer extends Component {
       convertedCurrency: "EUR",
       converterBaseValue: 1,
       currenciesArray: [],
-      convertingRate: 1,
+      convertingRate: "",
       convertingOutcome: 0
     };
   }

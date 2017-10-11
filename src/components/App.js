@@ -9,10 +9,6 @@ class App extends Component {
       (this.state = {
         isFetching: false,
         baseCurrency: "USD",
-        baseValue: 1,
-        exchangeRate: 0.8,
-        convertedValue: "",
-        convertedCurrency: "EUR",
         rates: [],
         date: new Date().toISOString().slice(0, 10)
       });
@@ -31,8 +27,7 @@ class App extends Component {
   };
   componentDidMount() {
     // Before performing the fetch, set isFetching to true
-    this.setState({ isFetching: true });
-    this.getRates();
+    this.setState({ isFetching: true }, this.getRates());
   }
   shouldComponentUpdate() {
     return this.state.isFetching !== false;
@@ -42,47 +37,27 @@ class App extends Component {
     e.preventDefault();
     //console.log("select-target", e.target);
     //console.log("select-target.value", e.target.value);
-    return new Promise((resolve, reject) => {
-      resolve(
-        this.setState({
-          baseCurrency: e.target.value
-        })
-      );
-    }).then(() => {
-      //console.log("hit");
-      //console.log("RAAATES", this.state.rates);
-      this.setState({ isFetching: true });
-      this.getRates();
-    });
+    this.setState(
+      {
+        baseCurrency: e.target.value
+      },
+      this.setState({ isFetching: true }, this.getRates())
+    );
   };
 
   setDate = e => {
     //console.log("date-target", e.target);
     //console.log("date-target.value", e.target.value);
-
-    return new Promise((resolve, reject) => {
-      resolve(
-        this.setState({
-          date: e.target.value
-        })
-      );
-    }).then(() => {
-      //console.log("hit");
-      //console.log("RAAATES", this.state.rates);
-      this.setState({ isFetching: true });
-      this.getRates();
-    });
+    this.setState(
+      {
+        date: e.target.value,
+        isFetching: true
+      },
+      this.getRates()
+    );
   };
   render() {
-    const {
-      baseCurrency,
-      baseValue,
-      exchangeRate,
-      convertedValue,
-      convertedCurrency,
-      rates,
-      date
-    } = this.state;
+    const { baseCurrency, rates, date } = this.state;
     const currenciesArray = Object.keys(rates);
     //console.log("RATES Passed", rates);
     return (
