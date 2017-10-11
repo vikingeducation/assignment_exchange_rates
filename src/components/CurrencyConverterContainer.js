@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Input from "./elements/Input";
 import CurrencyConverterForm from "./CurrencyConverterForm";
 import CurrencyConverterOutput from "./CurrencyConverterOutput";
+import PropTypes from "prop-types";
 
 class CurrencyConverterContainer extends Component {
   constructor(props) {
@@ -108,21 +109,17 @@ class CurrencyConverterContainer extends Component {
           </div>
           <CurrencyConverterOutput {...this.state} />
         </form>
-        {/*
-        input up
-        select up
-        p to
-        select 
-        button 
-
-
-        rate <p></p>
-
-        Output
-        */}
       </section>
     );
   }
 }
 
+CurrencyConverterContainer.propTypes = {
+  converterBaseCurrency: PropTypes.string.isRequired,
+  convertedCurrency: PropTypes.string.isRequired,
+  converterBaseValue: PropTypes.number,
+  currenciesArray: PropTypes.array.isRequired,
+  convertingRate: PropTypes.number,
+  convertingOutcome: PropTypes.number
+};
 export default CurrencyConverterContainer;

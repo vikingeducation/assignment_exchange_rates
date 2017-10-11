@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const CurrencyConverterOutput = ({
   converterBaseValue,
@@ -15,6 +16,22 @@ const CurrencyConverterOutput = ({
       <p>{convertedCurrency}</p>
     </div>
   );
+};
+
+CurrencyConverterOutput.propTypes = {
+  converterBaseValue: PropTypes.number,
+  converterBaseCurrency: PropTypes.string.isRequired,
+  convertingOutcome: PropTypes.number,
+  convertedCurrency: PropTypes.string.isRequired,
+  customConverterBaseValue: function(
+    props,
+    converterBaseValue,
+    CurrencyConverterOutput
+  ) {
+    if (typeof converterBaseValue !== "number") {
+      return new Error("Value must be a number");
+    }
+  }
 };
 
 export default CurrencyConverterOutput;

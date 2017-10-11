@@ -17,4 +17,9 @@ const ConverterBaseCurrencySelector = ({
   );
 };
 
+ConverterConvertedCurrencySelector.propTypes = {
+  convertedCurrency: PropTypes.string.isRequired,
+  selectCurrency: PropTypes.func.isRequired,
+  currenciesArray: PropTypes.array.isRequired
+};
 export default ConverterBaseCurrencySelector;

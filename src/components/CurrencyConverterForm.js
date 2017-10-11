@@ -2,6 +2,7 @@ import React from "react";
 import Input from "./elements/Input";
 import ConverterBaseCurrencySelector from "./ConverterBaseCurrencySelector";
 import ConverterConvertedCurrencySelector from "./ConverterConvertedCurrencySelector";
+import PropTypes from "prop-types";
 
 const CurrencyConverterForm = ({
   converterBaseCurrency,
@@ -40,6 +41,17 @@ const CurrencyConverterForm = ({
       />
     </div>
   );
+};
+
+CurrencyConverterForm.propTypes = {
+  converterBaseCurrency: PropTypes.string.isRequired,
+  selectBaseCurrency: PropTypes.string.isRequired,
+  currenciesArray: PropTypes.array.isRequired,
+  convertedCurrency: PropTypes.string.isRequired,
+  selectConvertedCurrency: PropTypes.func.isRequired,
+  converterBaseValue: PropTypes.number,
+  baseCurrencyInput: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired
 };
 
 export default CurrencyConverterForm;
