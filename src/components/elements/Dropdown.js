@@ -32,7 +32,12 @@ const Dropdown = ({
         <h4>{label}</h4>
       </label>
       <br />
-      <select value={indexofSelected} name={name} onChange={onChange}>
+      <select
+        className="form-control"
+        value={indexofSelected}
+        name={name}
+        onChange={onChange}
+      >
         {currencyList}
       </select>
     </div>
