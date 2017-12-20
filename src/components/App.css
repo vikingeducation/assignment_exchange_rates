@@ -1,10 +1,15 @@
 .App {
   text-align: center;
+  background-color:#111111;
 }
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
+}
+
+.exchangeRow {
+  color:#d6dbdb;
 }
 
 .App-header {

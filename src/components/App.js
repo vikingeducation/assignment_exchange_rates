@@ -20,7 +20,7 @@ const ExchangeList = ({ratesObj}) => {
 
 const ExchangeRow = ({currency, rate, base}) => {
   return (
-    <div className="row">
+    <div className="exchangeRow row">
       <div className="col-md-6">1 {currency}</div>
       <div className="col-md-6">
         {rate} {base}
@@ -29,10 +29,27 @@ const ExchangeRow = ({currency, rate, base}) => {
   );
 };
 
+const SelectCurrency = ({callback}) => {
+  return (
+    <form> 
+      
+      <input type="text" className="text" value="" name="">
+    </form>
+  
+  );
+}
+
+
 class App extends Component {
   constructor() {
     super();
     this.state = {};
+  }
+  
+  changeCurrency = (e) => {
+    let form = e.target;
+
+
   }
 
   componentDidMount() {
@@ -66,6 +83,19 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+
+        <nav role="navigation" className="navbar">
+          <div className="container-fluid">
+            <div className="navbar-header">
+              <a className="navbar-brand" href="#">
+                Currency Exchange 
+              </a>
+            </div>
+            <ul className="nav navbar-nav navbar-inverse">
+            </ul>
+          </div>
+        </nav>
+
         <div className="container">
           {this.state.ratesObj ? (
             <ExchangeList ratesObj={this.state.ratesObj} />
