@@ -1,22 +1,16 @@
 import React from "react";
-import Rate from './Rate'
+import Rate from "./Rate";
 
 const ExchangeRates = ({ rates }) => {
+  let allRates = [];
 
-  let allRates = {for (let k in rates) {
-  <Rate currency={k}  value={rates[k]}
-  }}
+  for (let k in rates) {
+    allRates.push(<Rate currency={k} value={rates[k]} />);
+  }
+  console.log("allRates-----------------");
+  console.log(allRates);
 
-
-
-  return (<ul>
-    {for (var k in rates){
-      <li> {k}:{rates[k]} </li>
-    }
-    }
-  </ul>
-)
+  return <ul>{allRates}</ul>;
 };
-
 
 export default ExchangeRates;
