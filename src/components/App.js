@@ -40,13 +40,13 @@ const SelectCurrency = ({ratesObj, callback}) => {
   let arrOfKeys = Object.keys(rates);
 
   return (
-    <form>
-      <select name="chosenCurrency">
+    <form name="currencyForm" onSubmit={callback}>
+      <select name="chosenCurrency" name="currencyForm">
         {arrOfKeys.map(key => {
-          return <option value={key}>{key}</option>;
+          return <option value={key} key={key}>{key}</option>;
         })}
       </select>
-      <Button text="submit" type="submit" onClick={callback} />
+      <input text="submit" type="submit"/>
     </form>
   );
 };
@@ -86,7 +86,7 @@ class App extends Component {
   }
 
   changeCurrency = e => {
-    e.preventDefault();
+    e.preventDefault;
     const form = e.target;
     const body = serialize(form, {hash: true});
     console.log(form);
