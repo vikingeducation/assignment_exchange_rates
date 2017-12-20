@@ -2,6 +2,12 @@ import React, {Component} from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
+//custom elements
+import Button from "./elements/Button";
+
+//node modules
+import serialize from "form-serialize"; //this ones for the form
+
 const ExchangeList = ({ratesObj}) => {
   let rates = ratesObj.rates;
   let base = ratesObj.base;
@@ -29,27 +35,26 @@ const ExchangeRow = ({currency, rate, base}) => {
   );
 };
 
-const SelectCurrency = ({callback}) => {
-  return (
-    <form> 
-      
-      <input type="text" className="text" value="" name="">
-    </form>
-  
-  );
-}
+const SelectCurrency = ({ratesObj, callback}) => {
+  let rates = ratesObj.rates;
+  let arrOfKeys = Object.keys(rates);
 
+  return (
+    <form>
+      <select name="chosenCurrency">
+        {arrOfKeys.map(key => {
+          return <option value={key}>{key}</option>;
+        })}
+      </select>
+      <Button text="submit" type="submit" onClick={callback} />
+    </form>
+  );
+};
 
 class App extends Component {
   constructor() {
     super();
     this.state = {};
-  }
-  
-  changeCurrency = (e) => {
-    let form = e.target;
-
-
   }
 
   componentDidMount() {
@@ -80,25 +85,83 @@ class App extends Component {
       );
   }
 
+  changeCurrency = e => {
+    e.preventDefault();
+    const form = e.target;
+    const body = serialize(form, {hash: true});
+    console.log(form);
+    console.log(body);
+
+    // // Create headers to set the content type to json
+    // const headers = new Headers();
+    // headers.append("Content-Type", "application/json");
+    //
+    // // Set options, and stringify the body to JSON
+    // const options = {
+    //   headers,
+    //   method: "POST",
+    //   body: JSON.stringify(body)
+    // };
+    //
+    // // Before performing the fetch, set isFetching to true
+    // this.setState({isFetching: true});
+    //
+    // fetch("https://reqres.in/api/users?delay=3", options)
+    //   .then(response => {
+    //     // If response not okay, throw an error
+    //     if (!response.ok) {
+    //       throw new Error(`${response.status} ${response.statusText}`);
+    //     }
+    //
+    //     // Otherwise, extract the response into json
+    //     return response.json();
+    //   })
+    //   .then(json => {
+    //     // Update the user list and isFetching.
+    //     // Reset the form in a callback after state is set.
+    //     this.setState(
+    //       {
+    //         isFetching: false,
+    //         users: [...this.state.users, json]
+    //       },
+    //       () => {
+    //         form.reset();
+    //       }
+    //     );
+    //   })
+    //   .catch(error => {
+    //     // Set error in state & log to console
+    //     console.log(error);
+    //     this.setState({
+    //       isFetching: false,
+    //       error
+    //     });
+    //   });
+  };
+
   render() {
     return (
       <div className="App">
-
         <nav role="navigation" className="navbar">
           <div className="container-fluid">
             <div className="navbar-header">
               <a className="navbar-brand" href="#">
-                Currency Exchange 
+                Currency Exchange
               </a>
             </div>
-            <ul className="nav navbar-nav navbar-inverse">
-            </ul>
+            <ul className="nav navbar-nav navbar-inverse" />
           </div>
         </nav>
 
         <div className="container">
           {this.state.ratesObj ? (
-            <ExchangeList ratesObj={this.state.ratesObj} />
+            <div>
+              <ExchangeList ratesObj={this.state.ratesObj} />
+              <SelectCurrency
+                ratesObj={this.state.ratesObj}
+                callback={this.changeCurrency}
+              />
+            </div>
           ) : (
             <div> Loading ... </div>
           )}
