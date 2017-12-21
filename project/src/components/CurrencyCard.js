@@ -1,9 +1,11 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 const CurrencyCard = ({ currency }) => {
   return (
     <div>
-      <p>{currency}</p>
+      <ul>
+        <li>{currency}</li>
+      </ul>
     </div>
   );
 };
