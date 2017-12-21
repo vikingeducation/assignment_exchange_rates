@@ -1,12 +1,13 @@
 // CurrencyList.js
-import React, { Component } from "react";
-import CurrencyCard from "./CurrencyCard";
+import React, { Component } from 'react';
+import CurrencyCard from './CurrencyCard';
 // ...CurrencyList component code...
 const CurrencyList = ({ currencies, isFetching }) => {
   // Generate the CurrencyCard for each Currency
-  const currencyList = currencies.map(currency => (
-    <CurrencyCard currency={currency} />
-  ));
+  console.log(currencies);
+  const currencyList = currencies.map(currency => {
+    return <CurrencyCard currency={currency} />;
+  });
 
   // card-group is the layout wrapper for Bootstrap
   // 4 cards. Add ternary operator to conditionally
