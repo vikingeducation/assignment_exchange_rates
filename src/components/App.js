@@ -7,13 +7,16 @@ class App extends Component {
     super();
     this.state ={
       isFetching: false,
+      currentExchangeCurr: 'USD'
     };
+
+    this.onCurrentCurrencyChange = this.onCurrentCurrencyChange.bind(this);
   }
 
-  componentDidMount() {
+  fetchAllCurrentRates(baseCurrency) {
     this.setState({isFetching: true});
 
-    fetch('https://api.fixer.io/latest')
+    fetch(`https://api.fixer.io/latest?base=${baseCurrency}`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`${response.status} ${response.statusText}`);
@@ -30,6 +33,17 @@ class App extends Component {
       });
   }
 
+  componentDidMount() {
+    this.fetchAllCurrentRates(this.state.currentExchangeCurr);
+  }
+
+  onCurrentCurrencyChange(e) {
+    const currency = e.target.value;
+
+    this.setState({ currentExchangeCurr: currency });
+    this.fetchAllCurrentRates(currency);
+  }
+
   render() {
     return (
       <div className="App">
@@ -37,9 +51,14 @@ class App extends Component {
           <h1 className="text-center">Exchange Rates</h1>
         </header>
         <div className="container">
-          <div className="row justify-content-left">
+          <div className="row justify-content-center">
             <InfoSection title="Current Exchange Rates" col='8'>
-              <CurrentRateList currentRates={this.state.currentRates} isFetching={this.state.isFetching} />
+              <CurrentRateList
+                currentRates={this.state.currentRates}
+                isFetching={this.state.isFetching}
+                currentExchangeCurr={this.state.currentExchangeCurr}
+                onCurrChange={this.onCurrentCurrencyChange}
+              />
             </InfoSection>
           </div>
         </div>
