@@ -9,7 +9,7 @@ body {
 }
 
 .InfoSection {
-  margin-bottom: 30px;
+  margin-bottom: -200px;
 }
 
 .card {
@@ -19,4 +19,16 @@ body {
 .currency-select {
   padding-left: 0px;
   margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 991px)  {
+  .InfoSection {
+    margin-bottom: -145px;
+  }
+}
+
+@media only screen and (max-width: 767px)  {
+  .InfoSection {
+    margin-bottom: 30px;
+  }
 }

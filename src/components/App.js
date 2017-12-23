@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import InfoSection from './elements/InfoSection';
 import CurrentRateList from './CurrentRateList';
 import HistoricalRatesList from './HistoricalRatesList';
+import ConversionForm from './ConversionForm';
 import { getHistoricalDates } from '../helpers/date';
 
 class App extends Component {
@@ -16,11 +17,14 @@ class App extends Component {
       historicalToCurrency: 'EUR',
       historicalRates: [],
       fromCurrency: 'USD',
-      toCurrency: 'EUR'
+      toCurrency: 'EUR',
+      convertAmount: 1
     };
 
     this.onCurrentCurrencyChange = this.onCurrentCurrencyChange.bind(this);
     this.onHistoricalRateChange = this.onHistoricalRateChange.bind(this);
+    this.onConvertChange = this.onConvertChange.bind(this);
+    this.onConvertAmountChange = this.onConvertAmountChange.bind(this);
   }
 
   fetchRates(type, baseCurrency, date, to) {
@@ -46,7 +50,9 @@ class App extends Component {
             historicalRates: [...this.state.historicalRates, json.rates[to]]
           });
         } else {
-          this.setState({ isFetchingConversion: false, convertedRate: json });
+          const convertedRate = json.rates[this.state.toCurrency];
+          const convertedTotal = convertedRate * this.state.convertAmount;
+          this.setState({ isFetchingConversion: false, convertedRate, convertedTotal });
         }
       })
       .catch(error => {
@@ -76,6 +82,7 @@ class App extends Component {
 
   componentDidMount() {
     this.fetchRates('current', this.state.currentExchangeCurr);
+    this.fetchRates('converted', this.state.fromCurrency, null, this.state.toCurrency);
     this.fetchHistoricalRates();
   }
 
@@ -96,7 +103,25 @@ class App extends Component {
         this.fetchHistoricalRates();
       });
     }
+  }
 
+  onConvertChange(e) {
+    const value = e.target.value;
+    const cb = () => {
+      this.fetchRates('converted', this.state.fromCurrency, null, this.state.toCurrency);
+    };
+
+    if (e.target.name === 'from') {
+      this.setState({fromCurrency: value}, cb);
+    } else if (e.target.name === 'to') {
+      this.setState({toCurrency: value}, cb);
+    }
+  }
+
+  onConvertAmountChange(e) {
+    const convertAmount = e.target.value;
+    const convertedTotal = this.state.convertedRate * convertAmount;
+    this.setState({convertAmount, convertedTotal});
   }
 
   render() {
@@ -106,7 +131,7 @@ class App extends Component {
           <h1 className="text-center">Exchange Rates</h1>
         </header>
         <div className="container">
-          <div className="row justify-content-center">
+          <div className="row justify-content-left">
             <InfoSection title="Current Rates" col='8'>
               <CurrentRateList
                 currentRates={this.state.currentRates}
@@ -115,6 +140,23 @@ class App extends Component {
                 onCurrChange={this.onCurrentCurrencyChange}
               />
             </InfoSection>
+            <InfoSection title="Quick Convert" col='4'>
+              <ConversionForm
+                isFetching={this.state.isFetchingConversion}
+                currentRates={this.state.currentRates}
+                convertedTotal={this.state.convertedTotal}
+                convertAmount={this.state.convertAmount}
+                fromCurrency={this.state.fromCurrency}
+                toCurrency={this.state.toCurrency}
+                onConvertChange={this.onConvertChange}
+                onConvertAmountChange={this.onConvertAmountChange}
+              />
+            </InfoSection>
+          </div>
+        </div>
+
+        <div className="container">
+          <div className="row justify-content-end">
             <InfoSection title="Historical Rates" col='4'>
               <HistoricalRatesList
                 isFetching={this.state.isFetchingHistoric}

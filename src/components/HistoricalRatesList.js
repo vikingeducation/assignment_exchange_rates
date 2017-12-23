@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from './elements/Select';
-import { getLists, displayList } from '../helpers/lists';
+import { getLists, displayHistoricalList } from '../helpers/lists';
 
 const HistoricalRatesList = (props) => {
   const {
@@ -19,7 +19,7 @@ const HistoricalRatesList = (props) => {
   if (historicalFromCurrency === historicalToCurrency) {
     ratesList = <p className="text-danger">Please select two DIFFERENT currencies</p>;
   } else {
-    ratesList = displayList(historicalRates);
+    ratesList = displayHistoricalList(historicalRates);
   }
 
   if (isFetching) {
@@ -53,7 +53,7 @@ const HistoricalRatesList = (props) => {
           </div>
         </div>
 
-        <dl className="HistoricalRates row text-center">
+        <dl className="HistoricalRates row text-center justify-content-center">
           {ratesList}
         </dl>
       </div>
