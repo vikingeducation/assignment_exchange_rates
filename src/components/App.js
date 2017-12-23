@@ -1,47 +1,102 @@
 import React, { Component } from 'react';
 import InfoSection from './elements/InfoSection';
 import CurrentRateList from './CurrentRateList';
+import HistoricalRatesList from './HistoricalRatesList';
+import { getHistoricalDates } from '../helpers/date';
 
 class App extends Component {
   constructor() {
     super();
     this.state ={
-      isFetching: false,
-      currentExchangeCurr: 'USD'
+      isFetchingCurrent: false,
+      isFetchingHistoric: false,
+      isFetchingConversion: false,
+      currentExchangeCurr: 'USD',
+      historicalFromCurrency: 'USD',
+      historicalToCurrency: 'EUR',
+      historicalRates: [],
+      fromCurrency: 'USD',
+      toCurrency: 'EUR'
     };
 
     this.onCurrentCurrencyChange = this.onCurrentCurrencyChange.bind(this);
+    this.onHistoricalRateChange = this.onHistoricalRateChange.bind(this);
   }
 
-  fetchAllCurrentRates(baseCurrency) {
-    this.setState({isFetching: true});
+  fetchRates(type, baseCurrency, date, to) {
+    if (type === 'current') {
+      this.setState({isFetchingCurrent: true});
+    } else if (type === 'historical') {
+      this.setState({isFetchingHistoric: true});
+    } else {
+      this.setState({isFetchingConversion: true});
+    }
 
-    fetch(`https://api.fixer.io/latest?base=${baseCurrency}`)
+    fetch(`https://api.fixer.io/${ date || 'latest' }?base=${baseCurrency}${ to ? '&symbols=' + to : ''}`)
       .then(response => {
-        if (!response.ok) {
-          throw new Error(`${response.status} ${response.statusText}`);
-        }
-
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
         return response.json();
       })
       .then(json => {
-        this.setState({ isFetching: false, currentRates: json });
+        if (type === 'current') {
+          this.setState({ isFetchingCurrent: false, currentRates: json });
+        } else if (type === 'historical') {
+          this.setState({
+            isFetchingHistoric: false,
+            historicalRates: [...this.state.historicalRates, json.rates[to]]
+          });
+        } else {
+          this.setState({ isFetchingConversion: false, convertedRate: json });
+        }
       })
       .catch(error => {
         console.log(error);
-        this.setState({ isFetching: false, error });
+        this.setState({
+          isFetchingCurrent: false,
+          isFetchingHistoric: false,
+          isFetchingConversion: false,
+          error
+        });
       });
   }
 
+  fetchHistoricalRates() {
+    const dates = getHistoricalDates();
+    this.setState({historicalRates: []});
+
+    dates.forEach(date => {
+      this.fetchRates(
+        'historical',
+        this.state.historicalFromCurrency,
+        date,
+        this.state.historicalToCurrency
+      );
+    });
+  }
+
   componentDidMount() {
-    this.fetchAllCurrentRates(this.state.currentExchangeCurr);
+    this.fetchRates('current', this.state.currentExchangeCurr);
+    this.fetchHistoricalRates();
   }
 
   onCurrentCurrencyChange(e) {
     const currency = e.target.value;
 
     this.setState({ currentExchangeCurr: currency });
-    this.fetchAllCurrentRates(currency);
+    this.fetchRates('current', currency);
+  }
+
+  onHistoricalRateChange(e) {
+    if (e.target.name === 'historicalFrom') {
+      this.setState({historicalFromCurrency: e.target.value}, () => {
+        this.fetchHistoricalRates();
+      });
+    } else {
+      this.setState({historicalToCurrency: e.target.value}, () => {
+        this.fetchHistoricalRates();
+      });
+    }
+
   }
 
   render() {
@@ -52,12 +107,22 @@ class App extends Component {
         </header>
         <div className="container">
           <div className="row justify-content-center">
-            <InfoSection title="Current Exchange Rates" col='8'>
+            <InfoSection title="Current Rates" col='8'>
               <CurrentRateList
                 currentRates={this.state.currentRates}
-                isFetching={this.state.isFetching}
+                isFetching={this.state.isFetchingCurrent}
                 currentExchangeCurr={this.state.currentExchangeCurr}
                 onCurrChange={this.onCurrentCurrencyChange}
+              />
+            </InfoSection>
+            <InfoSection title="Historical Rates" col='4'>
+              <HistoricalRatesList
+                isFetching={this.state.isFetchingHistoric}
+                currentRates={this.state.currentRates}
+                historicalRates={this.state.historicalRates}
+                historicalFromCurrency={this.state.historicalFromCurrency}
+                historicalToCurrency={this.state.historicalToCurrency}
+                onHistoricalRateChange={this.onHistoricalRateChange}
               />
             </InfoSection>
           </div>

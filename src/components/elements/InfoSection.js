@@ -7,7 +7,7 @@ const InfoSection = props => {
     <div className={"InfoSection col-md-" + col}>
       <div className="card">
         <div className="card-block">
-          <h3 className="card-title"><u>{title}</u></h3>
+          <h3 className="card-title text-center"><u>{title}</u></h3>
           <div className="card-content">
             {children}
           </div>
