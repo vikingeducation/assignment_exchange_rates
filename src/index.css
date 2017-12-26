@@ -8,12 +8,17 @@ body {
   padding: 20px;
 }
 
-.InfoSection {
-  margin-bottom: -200px;
+.CurrentRateCard {
+  min-height: 490px;
+}
+
+.card-title {
+  text-decoration: underline;
 }
 
 .card {
   background-color: #f5f5f5;
+  display: inline-block;
 }
 
 .currency-select {
@@ -21,14 +26,17 @@ body {
   margin-bottom: 20px;
 }
 
-@media only screen and (max-width: 991px)  {
-  .InfoSection {
-    margin-bottom: -145px;
-  }
+.card-columns {
+  column-count: 2;
 }
 
 @media only screen and (max-width: 767px)  {
   .InfoSection {
     margin-bottom: 30px;
   }
+  .card-columns {
+    column-count: 1;
+  }
 }
+
+

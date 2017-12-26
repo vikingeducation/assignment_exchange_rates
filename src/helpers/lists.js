@@ -8,14 +8,14 @@ export function getLists(ratesObject) {
   if (ratesObject) {
     let rates = Object.entries(ratesObject.rates).sort();
 
-    for (let rate of rates) {
+    for (let [currency, rate] of rates) {
       rateList.push(
-        <div className="col-sm-2" key={rate[0]}>
-          <dt>{rate[0]}</dt>
-          <dd>{round(rate[1])}</dd>
+        <div className="col-sm-2" key={currency}>
+          <dt>{currency}</dt>
+          <dd>{round(rate)}</dd>
         </div>
       );
-      currencies.push(rate[0]);
+      currencies.push(currency);
     }
 
     // put in alphabetical order

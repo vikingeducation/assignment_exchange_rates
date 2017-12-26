@@ -1,64 +1,113 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Select from './elements/Select';
-import { getLists, displayHistoricalList } from '../helpers/lists';
+import { displayHistoricalList } from '../helpers/lists';
+import { getHistoricalDates } from '../helpers/date';
+import { fetchRates, fetchCurrencies } from '../helpers/fixer_api';
 
-const HistoricalRatesList = (props) => {
-  const {
-    currentRates,
-    historicalFromCurrency,
-    historicalToCurrency,
-    historicalRates,
-    onHistoricalRateChange,
-    isFetching
-  } = props;
+class HistoricalRatesList extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isFetching: false,
+      fromCurrency: 'USD',
+      toCurrency: 'EUR',
+      rates: [],
+      currencies: []
+    };
 
-  const lists = getLists(currentRates);
-
-  let ratesList;
-
-  if (historicalFromCurrency === historicalToCurrency) {
-    ratesList = <p className="text-danger">Please select two DIFFERENT currencies</p>;
-  } else {
-    ratesList = displayHistoricalList(historicalRates);
+    this.fetchHistoricalRates = this.fetchHistoricalRates.bind(this);
+    this.onHistoricalRateChange = this.onHistoricalRateChange.bind(this);
   }
 
-  if (isFetching) {
-    return <div>Loading...</div>;
-  } else {
-    return (
-      <div className="HistoricalRatesList container">
-        <div className="row justify-content-center">
-          <div className="col-md-6">
-            <Select
-              options={lists.currencies}
-              className="currency-select"
-              name="historicalFrom"
-              exchangeCurr={historicalFromCurrency}
-              onChange={onHistoricalRateChange}
-            />
-          </div>
-        </div>
-
-        <p className="text-center">to</p>
-
-        <div className="row justify-content-center">
-          <div className="col-md-6">
-            <Select
-              options={lists.currencies}
-              className="currency-select"
-              name="historicalTo"
-              exchangeCurr={historicalToCurrency}
-              onChange={onHistoricalRateChange}
-            />
-          </div>
-        </div>
-
-        <dl className="HistoricalRates row text-center justify-content-center">
-          {ratesList}
-        </dl>
-      </div>
-    );
+  componentDidMount() {
+    fetchCurrencies(this);
+    this.fetchHistoricalRates();
   }
-};
+
+  fetchHistoricalRates() {
+    const dates = getHistoricalDates();
+    this.setState({ rates: [] });
+
+    dates.forEach(date => {
+      fetchRates(
+        this,
+        'historical',
+        this.state.fromCurrency,
+        date,
+        this.state.toCurrency
+      );
+    });
+
+    this.onHistoricalRateChange = this.onHistoricalRateChange.bind(this);
+  }
+
+  onHistoricalRateChange(e) {
+    if (e.target.name === 'historicalFrom') {
+      this.setState({ fromCurrency: e.target.value }, () => {
+        this.fetchHistoricalRates();
+      });
+    } else {
+      this.setState({ toCurrency: e.target.value }, () => {
+        this.fetchHistoricalRates();
+      });
+    }
+  }
+
+  render() {
+    const {
+      isFetching,
+      fromCurrency,
+      toCurrency,
+      rates,
+      currencies
+    } = this.state;
+
+    let ratesList;
+
+    if (fromCurrency === toCurrency) {
+      ratesList = <p className="text-danger">Please select two DIFFERENT currencies</p>;
+    } else {
+      ratesList = displayHistoricalList(rates);
+    }
+
+    if (isFetching) {
+      return <div>Loading...</div>;
+    } else {
+      return (
+        <div className="HistoricalRatesList container">
+          <div className="row justify-content-center">
+            <div className="col-md-6">
+              <Select
+                options={currencies}
+                className="currency-select"
+                name="historicalFrom"
+                exchangeCurr={fromCurrency}
+                onChange={this.onHistoricalRateChange}
+              />
+            </div>
+          </div>
+
+          <div className="text-center">to</div>
+
+          <div className="row justify-content-center">
+            <div className="col-md-6">
+              <Select
+                options={currencies}
+                className="currency-select"
+                name="historicalTo"
+                exchangeCurr={toCurrency}
+                onChange={this.onHistoricalRateChange}
+              />
+            </div>
+          </div>
+
+          <dl className="HistoricalRates row text-center justify-content-center">
+            {ratesList}
+          </dl>
+        </div>
+      );
+    }
+  }
+}
 
 export default HistoricalRatesList;

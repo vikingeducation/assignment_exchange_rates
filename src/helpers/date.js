@@ -1,24 +1,14 @@
 export function getHistoricalDates() {
   let thisYear = new Date().getFullYear();
-  let oneYr = new Date();
-  let twoYr = new Date();
-  let threeYr = new Date();
-  let fourYr = new Date();
-  let fiveYr = new Date();
+  let dates = [];
 
-  oneYr.setYear(thisYear - 1);
-  twoYr.setYear(thisYear - 2);
-  threeYr.setYear(thisYear - 3);
-  fourYr.setYear(thisYear - 4);
-  fiveYr.setYear(thisYear - 5);
+  for (var i = 1; i <= 5; i++) {
+    let date = new Date();
+    date.setYear(thisYear - i);
+    dates.push(formatDate(date));
+  }
 
-  return [
-    formatDate(oneYr),
-    formatDate(twoYr),
-    formatDate(threeYr),
-    formatDate(fourYr),
-    formatDate(fiveYr)
-  ];
+  return dates;
 }
 
 function formatDate(date) {
