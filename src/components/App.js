@@ -24,19 +24,44 @@ class App extends Component {
     super()
     this.state ={
       isFetching: false,
-      latestRates: {}
+      latestRates: {},
+      currencyOptions: [],
+      baseCurrency: 'EUR'
     }
+
 
   }
 
   componentDidMount() {
     this.setState({isFetching: true})
-    fetch('https://api.fixer.io/latest')
+    const baseCurrency = this.state.baseCurrency === 'EUR' ? '' : `?base=${this.state.baseCurrency}`
+    fetch('https://api.fixer.io/latest' + baseCurrency)
     .then( (response) => response.json())
     .then((json) => {
       this.setState({
         isFetching: false,
-        latestRates: json.rates
+        latestRates: json.rates,
+        currencyOptions: Object.keys(json.rates)
+      })
+    })
+  }
+
+  onChangeToday = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+    this.setState({isFetching: true})
+    const newCurrency = e.target.value
+    console.log('in onChangeToday')
+    console.log(newCurrency)
+    fetch('https://api.fixer.io/latest?base=' + newCurrency)
+    .then( (response) => response.json())
+    .then((json) => {
+      this.setState({
+        isFetching: false,
+        latestRates: json.rates,
+        currencyOptions: Object.keys(json.rates),
+        baseCurrency: newCurrency
       })
     })
   }
@@ -60,6 +85,7 @@ class App extends Component {
           <div className="col">
             <h2 className="text-center">Current Rates of Exchange</h2>
             <TableTodays
+              onChangeToday={this.onChangeToday}
               {...this.state}
             />
           </div>
