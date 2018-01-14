@@ -2,12 +2,8 @@ import React, { Component } from 'react';
 import FormConverter from './FormConverter'
 import TableHistorical from './TableHistorical'
 import TableTodays from './TableTodays'
+import {getConversionR} from './helpers/conversion'
 
-// Latest Exchange Rates (for eur)
-//
-// Select currency default_currency (for the default currency & choosen)
-// output_result
-//
 // Historical Rates - choose currency1, currency2, how_far_back, monthly or yearly, output is table with the same day for every month or year and the rate
 //
 // Currency Converter
@@ -26,7 +22,11 @@ class App extends Component {
       isFetching: false,
       latestRates: {},
       currencyOptions: [],
-      baseCurrency: 'EUR'
+      baseCurrency: 'EUR',
+      inputCurrency: '',
+      outputCurrency: '',
+      inputAmount: '',
+      conversionRate: ''
     }
 
 
@@ -52,8 +52,6 @@ class App extends Component {
     })
     this.setState({isFetching: true})
     const newCurrency = e.target.value
-    console.log('in onChangeToday')
-    console.log(newCurrency)
     fetch('https://api.fixer.io/latest?base=' + newCurrency)
     .then( (response) => response.json())
     .then((json) => {
@@ -64,6 +62,32 @@ class App extends Component {
         baseCurrency: newCurrency
       })
     })
+  }
+
+  getConversionRate = (inputCurrency, outputCurrency) => {
+    fetch(`https://api.fixer.io/latest?base=${inputCurrency}?symbols=${outputCurrency}`)
+    .then( (response) => response.json())
+    .then((json) => {
+      this.setState({
+        isFetching: false,
+        inputCurrency: inputCurrency,
+        outputCurrency: outputCurrency,
+        conversionRate: json.rates[outputCurrency]
+      })
+    })
+  }
+
+  onChangeInput = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+    if (!this.state.inputCurrency || !this.state.outputCurrency || !this.state.inputAmount) {
+      return null
+    }
+
+      this.setState({
+        conversionRate: getConversionR(this.state.inputCurrency, this.inputAmount, this.state.outputCurrency, this.state.latestRates)
+      })
   }
 
 
@@ -77,7 +101,11 @@ class App extends Component {
         <div className="row">
           <div className="col">
             <h2 className="text-center">Currency Converter</h2>
-
+            <FormConverter
+              getConversionRate={this.getConversionRate}
+              onChangeInput={this.onChangeInput}
+              {...this.state}
+            />
             <h2 className="text-center">Historical Rates</h2>
             <TableHistorical />
 
