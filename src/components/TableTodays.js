@@ -10,8 +10,6 @@ const TableTodays = ({isFetching, latestRates, currencyOptions, baseCurrency, on
         <td>{latestRates[key]}</td>
       </tr>
   ))
-  console.log('base currency is: ')
-  console.log(baseCurrency)
 
   return (
     <div className='todays-rates'>

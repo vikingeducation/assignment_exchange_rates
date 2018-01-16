@@ -6,7 +6,7 @@ import Select from './elements/Select'
 import ConversionResults from './ConversionResults'
 
 
-const FormConverter = ({isFetching, currencyOptions, inputCurrency, outputCurrency, inputAmount, latestRates, getConversionRate, onChangeInput}) => {
+const FormConverter = ({isFetching, currencyOptions, inputCurrency, outputCurrency, inputAmount, onChangeInput, conversionRate}) => {
 
   return (
 
@@ -25,7 +25,12 @@ const FormConverter = ({isFetching, currencyOptions, inputCurrency, outputCurren
         <Select name='outputCurrency' options={currencyOptions} value={outputCurrency} onChange={onChangeInput} placeholder={outputCurrency}/>
       </InputGroup>
 
-      <ConversionResults getConversionRate={getConversionRate} onChange={onChangeInput}/>
+      <ConversionResults
+        inputCurrency={inputCurrency}
+        outputCurrency={outputCurrency}
+        inputAmount={inputAmount}
+        conversionRate={conversionRate}
+      />
 
     </div>
 

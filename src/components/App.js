@@ -2,15 +2,9 @@ import React, { Component } from 'react';
 import FormConverter from './FormConverter'
 import TableHistorical from './TableHistorical'
 import TableTodays from './TableTodays'
-import {getConversionR} from './helpers/conversion'
+import {getRatesNames} from './helpers/conversion'
 
 // Historical Rates - choose currency1, currency2, how_far_back, monthly or yearly, output is table with the same day for every month or year and the rate
-//
-// Currency Converter
-// input_amount
-// input_currency
-// output_currency
-// output_result
 
 
 
@@ -26,7 +20,11 @@ class App extends Component {
       inputCurrency: '',
       outputCurrency: '',
       inputAmount: '',
-      conversionRate: ''
+      conversionRate: '',
+      currency1: '',
+      currency2: '',
+      startDate: '',
+      historicalRates: {}
     }
 
 
@@ -41,7 +39,7 @@ class App extends Component {
       this.setState({
         isFetching: false,
         latestRates: json.rates,
-        currencyOptions: Object.keys(json.rates)
+        currencyOptions: getRatesNames(json.rates)
       })
     })
   }
@@ -64,30 +62,49 @@ class App extends Component {
     })
   }
 
-  getConversionRate = (inputCurrency, outputCurrency) => {
-    fetch(`https://api.fixer.io/latest?base=${inputCurrency}?symbols=${outputCurrency}`)
-    .then( (response) => response.json())
-    .then((json) => {
-      this.setState({
-        isFetching: false,
-        inputCurrency: inputCurrency,
-        outputCurrency: outputCurrency,
-        conversionRate: json.rates[outputCurrency]
-      })
-    })
-  }
+  // getConversionRate = (inputCurrency, outputCurrency) => {
+  //   fetch(`https://api.fixer.io/latest?base=${inputCurrency}?symbols=${outputCurrency}`)
+  //   .then( (response) => response.json())
+  //   .then((json) => {
+  //     this.setState({
+  //       isFetching: false,
+  //       inputCurrency: inputCurrency,
+  //       outputCurrency: outputCurrency,
+  //       conversionRate: json.rates[outputCurrency]
+  //     })
+  //   })
+  // }
 
   onChangeInput = (e) => {
     this.setState({
       [e.target.name]: e.target.value
-    })
-    if (!this.state.inputCurrency || !this.state.outputCurrency || !this.state.inputAmount) {
-      return null
-    }
-
-      this.setState({
-        conversionRate: getConversionR(this.state.inputCurrency, this.inputAmount, this.state.outputCurrency, this.state.latestRates)
+    }, ()=> {
+      if (!this.state.inputCurrency || !this.state.outputCurrency || !this.state.inputAmount) {
+        return null
+      }
+      if ( this.state.inputCurrency === this.state.outputCurrency) {
+        this.setState({
+          isFetching: false,
+          conversionRate: '1'
+        })
+        return
+      }
+      this.setState({isFetching: true})
+      fetch(`https://api.fixer.io/latest?base=${this.state.inputCurrency}`)
+      .then( (response) => response.json())
+      .then((json) => {
+        this.setState({
+          isFetching: false,
+          conversionRate: json.rates[this.state.outputCurrency]
+        })
       })
+
+    })
+
+  }
+
+  onChangeHistoryInput = (e) => {
+
   }
 
 
@@ -102,12 +119,15 @@ class App extends Component {
           <div className="col">
             <h2 className="text-center">Currency Converter</h2>
             <FormConverter
-              getConversionRate={this.getConversionRate}
               onChangeInput={this.onChangeInput}
               {...this.state}
             />
             <h2 className="text-center">Historical Rates</h2>
-            <TableHistorical />
+            <h5 className="text-center">Check the rate on the same day for the past number of months/years</h5>
+            <TableHistorical
+              onChangeHistoryInput={this.onChangeHistory}
+              {...this.state}
+            />
 
           </div>
           <div className="col">
