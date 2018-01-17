@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import Select from './elements/Select'
 import InputGroup from './elements/InputGroup'
+import Input from './elements/Input'
+import {getTodayDateFormat} from './helpers/conversion'
 
 
-
-const TableHistorical = ({currencyOptions, currency1, currency2, startDate, onChangeHistory, historicalRates}) => {
-
-  const historicalData = Object.keys(historicalRates).map( (key) => (
-      <tr key={key} >
-        <th scope="row">{key}</th>
-        <td>{historicalRates[key]}</td>
+const TableHistorical = ({currencyOptions, currency1, currency2, startDate, onChangeHistoryInput, historicalRates}) => {
+  console.log(historicalRates)
+  const historicalData = historicalRates.map( (dayRate) => (
+      <tr key={dayRate.date} >
+        <th scope="row">{dayRate.date}</th>
+        <td>{dayRate.rate}</td>
       </tr>
   ))
 
@@ -20,7 +21,7 @@ const TableHistorical = ({currencyOptions, currency1, currency2, startDate, onCh
         <Select name="currency1"
                 options={currencyOptions}
                 value={currency1}
-                onChange={onChangeHistory}
+                onChange={onChangeHistoryInput}
                 placeholder={currency1}
         />
       </InputGroup>
@@ -28,12 +29,12 @@ const TableHistorical = ({currencyOptions, currency1, currency2, startDate, onCh
         <Select name="currency2"
                 options={currencyOptions}
                 value={currency2}
-                onChange={onChangeHistory}
+                onChange={onChangeHistoryInput}
                 placeholder={currency2}
         />
       </InputGroup>
-      <InputGroup name="timeline" labelText="Since when?">
-        <input className="form-control" type="date" value="2011-08-19" id="example-date-input" />
+      <InputGroup name="startDate" labelText="Since when?">
+        <Input type="date" name='startDate' value={startDate} min="1999-01-10" onChange={onChangeHistoryInput} />
       </InputGroup>
 
       <table className="table table-sm table-inverse">

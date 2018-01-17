@@ -13,8 +13,28 @@ export function getRatesNames(jsonObject) {
   return arr.sort()
 }
 
+export function getTodayDateFormat(dateNumerical) {
+  let today = new Date(dateNumerical);
+  let dd = today.getDate();
+  let mm = today.getMonth()+1;
+  const yyyy = today.getFullYear();
+  if(dd<10) {
+    dd=`0${dd}`;
+  }
+  if(mm<10) {
+    mm=`0${mm}`;
+  }
+  return`${yyyy}-${mm}-${dd}`;
+}
 
-// export function getConversionR(fromCurrency, value, toCurrency, latestRatesForConversion) {
-//   let result =  parseInt(value) * latestRatesForConversion[toCurrency] / latestRatesForConversion[fromCurrency]
-//   return Math.round(result.toPrecision()  * 100)/ 100
-// }
+export function getDatesArray(startDate) {
+  let start = new Date(startDate);
+  let finish = new Date();
+  let array = [];
+  while (start < finish) {
+    array.push(getTodayDateFormat(start));
+    start = start.setMonth(start.getMonth() + 1);
+    start = new Date(start)
+  }
+  return array
+}
