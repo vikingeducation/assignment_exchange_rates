@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Grid, Container, Header, Dropdown} from 'semantic-ui-react';
 
 import ExchangeRatesList from './ExchangeRatesList';
+import CurrencyConverter from "./CurrencyConverter";
 import {eur_exchange_rates} from "../fixtures/all_exchange_rates_base_eur";
 
 class App extends Component {
@@ -24,7 +25,7 @@ class App extends Component {
     let rateOptions = [];
 
     if (this.state.rates) {
-      for(let key in this.state.rates) {
+      for (let key in this.state.rates) {
         rateOptions.push({
           key: key,
           text: key,
@@ -52,7 +53,7 @@ class App extends Component {
                 <Dropdown fluid selection
                           placeholder={this.state.selectedCurrency}
                           options={this.currencyTypes()}
-                          // onChange={this.onFilterSelection}
+                  //TODO: onChange={this.onFilterSelection}
                 />
                 <br/>
                 <ExchangeRatesList rates={this.state.rates}/>
@@ -62,7 +63,17 @@ class App extends Component {
               {/* Right column */}
               <Grid.Column>
                 {/* Currency Converter */}
-                <Grid.Row></Grid.Row>
+                <Grid.Row>
+                  <Grid.Column>
+                    <Header as="h2" size="medium">
+                      Currency converter
+                    </Header>
+                    <CurrencyConverter
+                      selectedCurrency={this.state.selectedCurrency}
+                      currencyTypes={this.currencyTypes()}
+                      rates={this.state.rates}/>
+                  </Grid.Column>
+                </Grid.Row>
 
 
                 {/* Historical Rates*/}

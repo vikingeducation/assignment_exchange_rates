@@ -6,7 +6,7 @@ const ExchangeRatesList = ({ rates }) => {
   for (let key in rates) {
     if (rates.hasOwnProperty(key)) {
       ratesList.push(
-        <Table.Row>
+        <Table.Row key={key}>
           <Table.Cell>{key}</Table.Cell>
           <Table.Cell>{rates[key]}</Table.Cell>
         </Table.Row>
