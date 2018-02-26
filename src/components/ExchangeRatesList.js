@@ -1,9 +1,8 @@
 import React from 'react';
-import {Table, Header} from 'semantic-ui-react';
+import {Table} from 'semantic-ui-react';
 
 const ExchangeRatesList = ({ rates }) => {
   const ratesList = [];
-  const currency = 'EUR';
   for (let key in rates) {
     if (rates.hasOwnProperty(key)) {
       ratesList.push(
@@ -16,8 +15,8 @@ const ExchangeRatesList = ({ rates }) => {
   }
 
   return (
-    <section>
-      <Header as="h1" size="medium">Latest rates for {currency}</Header>
+    <section className="exchange-rate-list">
+
       <Table celled columns={2}>
         <Table.Header>
           <Table.Row>
