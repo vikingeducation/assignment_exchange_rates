@@ -9,15 +9,15 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      selectedCurrency: 'EUR',
+      baseCurrency: 'EUR',
       historicalRate: '',
       rates: []
     };
   }
 
   componentDidMount() {
-    this.getLatestRates(this.state.selectedCurrency);
-    this.getHistoricalRates(this.state.selectedCurrency);
+    this.getLatestRates();
+    this.getHistoricalRates();
   }
 
   currencyTypes() {
@@ -42,12 +42,12 @@ class App extends Component {
   }
 
   getLatestRates() {
-    fetch(`https://api.fixer.io/latest?base=${this.state.selectedCurrency}`)
+    fetch(`https://api.fixer.io/latest?base=${this.state.baseCurrency}`)
       .then(this.handleFetchErrors)
       .then(response => response.json())
       .then(json => {
         this.setState({
-          rates: json['rates'],
+          rates: json.rates,
         });
       })
       .catch(error => {
@@ -58,15 +58,15 @@ class App extends Component {
   getHistoricalRates() {
     const date = "2000-06-16";
     const defaultHistoricalCurrency = 'USD';
-    const selectedCurrency = this.state.selectedCurrency;
+    const base = this.state.baseCurrency;
 
     fetch(
-      `https://api.fixer.io/${date}?base=${defaultHistoricalCurrency}&symbols=${selectedCurrency}`
+      `https://api.fixer.io/${date}?base=${defaultHistoricalCurrency}&symbols=${base}`
     )
       .then(this.handleFetchErrors)
       .then(response => response.json())
       .then(json => {
-        this.setState({ historicalRate: json['rates'][this.state.selectedCurrency] });
+        this.setState({ historicalRate: json.rates[this.state.baseCurrency] });
       })
       .catch(error => {
         console.error(error);
@@ -75,7 +75,7 @@ class App extends Component {
 
   handleCurrencySelection = (event) => {
     const text = event.target.innerText;
-    this.setState({selectedCurrency: text}, this.fetchData)
+    this.setState({baseCurrency: text}, this.fetchData)
   };
 
   handleFetchErrors(response) {
@@ -94,11 +94,11 @@ class App extends Component {
             {/* Left Column */}
             <Grid.Column>
               <Grid.Row><Grid.Column><Header as="h2" size="medium">
-                Latest rates for {this.state.selectedCurrency}
+                Latest rates for {this.state.baseCurrency}
               </Header></Grid.Column></Grid.Row>
               <br/>
               <Dropdown fluid selection
-                        placeholder={this.state.selectedCurrency}
+                        placeholder={this.state.baseCurrency}
                         options={this.currencyTypes()}
                         onChange={this.handleCurrencySelection}
               />
@@ -116,9 +116,7 @@ class App extends Component {
                     Currency converter
                   </Header>
                   <CurrencyConverter
-                    selectedCurrency={this.state.selectedCurrency}
-                    currencyTypes={this.currencyTypes()}
-                    rates={this.state.rates}/>
+                    currencyTypes={this.currencyTypes()}/>
                 </Grid.Column>
               </Grid.Row>
 
@@ -129,7 +127,7 @@ class App extends Component {
                   <Header as="h2" size="medium">
                     Rates for
                     {` USD to
-                      ${this.state.selectedCurrency} for June 16, 2000:`}
+                      ${this.state.baseCurrency} for June 16, 2000:`}
                   </Header>
                   <HistoricalRate rate={this.state.historicalRate}/>
 

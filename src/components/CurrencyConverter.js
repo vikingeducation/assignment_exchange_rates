@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Segment, Form, Button, Message} from 'semantic-ui-react';
 
+const fx = window.fx;
+
 class CurrencyConverter extends Component {
   constructor() {
     super();
@@ -8,8 +10,11 @@ class CurrencyConverter extends Component {
       currencyFrom: '',
       currencyTo: '',
       amountToConvert: 0,
+      conversionResult: '',
       formErrors: {
-        amountToConvert: ''
+        amountToConvert: '',
+        currencyFrom: '',
+        currencyTo: ''
       },
       currFromValid: false,
       currToValid: false,
@@ -19,19 +24,35 @@ class CurrencyConverter extends Component {
   }
 
   handleCurrencyFrom = (event) => {
-    debugger;
-    this.setState({
-      currencyFrom: event.target.innerHTML,
-      currFromValid: true
-    }, this.validateForm);
+    let errors = this.state.formErrors;
+    const text = event.target.innerText;
+    if (text.length === 3) {
+      errors.currencyFrom = '';
+
+      this.setState({
+        currencyFrom: text,
+        currFromValid: true
+      }, this.validateForm);
+    } else {
+      errors.currencyFrom = 'Please reselect a currency to convert from.';
+      this.validateForm();
+    }
   };
 
   handleCurrencyTo = (event) => {
-    debugger;
-    this.setState({
-      currencyTo: event.target.innerHTML,
-      currToValid: true
-    }, this.validateForm);
+    let errors = this.state.formErrors;
+    const text = event.target.innerText;
+    if (text.length === 3) {
+      errors.currencyTo = '';
+
+      this.setState({
+        currencyTo: text,
+        currToValid: true
+      }, this.validateForm);
+    } else {
+      errors.currencyFrom = 'Please reselect a currency to convert to.';
+      this.validateForm();
+    }
   };
 
   handleConversionAmt = (event) => {
@@ -55,7 +76,29 @@ class CurrencyConverter extends Component {
 
   calculateCurrencyAmt = (event) => {
     event.preventDefault();
-    console.info(`Calling API with: ${this.state.currencyFrom}, ${this.state.currencyTo}, and ${this.state.amountToConvert}`)
+    const { currencyFrom } = this.state;
+
+    fetch(`https://api.fixer.io/latest?base=${currencyFrom}`)
+      .then(response => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json()
+      })
+      .then(json => {
+        fx.base = currencyFrom;
+        fx.rates = json.rates;
+      })
+      .then(this.converter)
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  converter = () => {
+    const { currencyFrom, currencyTo, amountToConvert } = this.state;
+    let rate = fx(amountToConvert).from(currencyFrom).to(currencyTo);
+    this.setState({conversionResult: rate.toFixed(4)})
   };
 
   displayFormErrors() {
@@ -74,7 +117,6 @@ class CurrencyConverter extends Component {
     this.setState({
       formValid: currFromValid && currToValid && amtToConvertValid
     });
-    console.info(`from: ${currFromValid}, to: ${currToValid}, amt: ${amtToConvertValid}`)
   };
 
   render() {
@@ -84,7 +126,6 @@ class CurrencyConverter extends Component {
               onSubmit={this.calculateCurrencyAmt}>
           <Form.Group widths="equal">
             <Form.Select inline fluid label="From"
-                         placeholder={this.props.selectedCurrency}
                          options={this.props.currencyTypes}
                          onChange={this.handleCurrencyFrom}/>
 
@@ -102,8 +143,7 @@ class CurrencyConverter extends Component {
                    header="Errors with your calculation"/>
 
           <Segment raised>
-            {/*TODO: change this when API call is live*/}
-            <p><strong>Result:</strong> {this.state.amountToConvert}</p>
+            <p><strong>Result:</strong> {this.state.conversionResult}</p>
           </Segment>
           <Form.Group widths="equal">
             <Button fluid disabled={!this.state.formValid}
