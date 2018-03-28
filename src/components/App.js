@@ -75,7 +75,7 @@ class App extends Component {
 
   handleCurrencySelection = (event) => {
     const text = event.target.innerText;
-    this.setState({baseCurrency: text}, this.fetchData)
+    this.setState({ baseCurrency: text }, this.fetchData)
   };
 
   handleFetchErrors(response) {
@@ -88,7 +88,16 @@ class App extends Component {
   render() {
     return <div className="App">
       <Container>
+        <div className="code-link">
+          <a href="https://github.com/SeanLuckett/assignment_exchange_rates"
+             target="_blank"
+             rel="noopener noreferrer">
+            See the code
+          </a>
+        </div>
+
         <Header as="h1" textAlign="center">Exchange Rates</Header>
+
         <Grid columns={2}>
           <Grid.Row>
             {/* Left Column */}
