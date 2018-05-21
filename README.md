@@ -1,2 +1,8 @@
 # assignment_exchange_rates
-How much does a Big Mac cost in Italy?
+Viking Code School: How much does a Big Mac cost in Italy?
+
+[Anne Richardson](https://github.com/lortza)
+
+This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+
+
