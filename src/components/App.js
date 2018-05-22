@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 import FixerClient from './FixerClient'
+import Header from './Header'
 
 class App extends Component {
   render() {
@@ -8,6 +9,7 @@ class App extends Component {
       <div className="container-fluid">
         Hello World
         <FixerClient />
+        <Header />
       </div>
     );
   }
