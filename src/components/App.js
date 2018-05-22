@@ -3,6 +3,7 @@ import '../App.css';
 import Header from './Header'
 import Form from './Form'
 import CurrentRates from './CurrentRates'
+import CurrencyConversion from './CurrencyConversion'
 
 class App extends Component {
   constructor(){
@@ -44,6 +45,10 @@ class App extends Component {
         </div>
 
         <div className="row">
+          <div className="col-sm-6">
+            { this.state.rates ? <CurrencyConversion rates={this.state.rates} inputAmount={this.state.inputAmount} /> : "" }
+          </div>
+
           <div className="col-sm-6">
             { this.state.rates ? <CurrentRates rates={this.state.rates} /> : "" }
           </div>
