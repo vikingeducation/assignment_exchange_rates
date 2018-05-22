@@ -7,23 +7,39 @@ import CurrentRates from './CurrentRates'
 class App extends Component {
   constructor(){
     super()
-    this.state.rates = false
-    // this.rates = {
-    //   USD: 1.307716,
-    //   AUD: 1.256333,
-    //   CAD: 1.333812,
-    //   PLN: 4.150819,
-    //   MXN: 16.259128
-    // }
+    this.state = {
+      rates: false,
+      inputAmount: 0
+    }
   }
+
+  setRates = (data) => {
+    const {USD, AUD, CAD, PLN, MXN} = data
+    this.setState({
+      rates: {
+        USD: USD,
+        AUD: AUD,
+        CAD: CAD,
+        PLN: PLN,
+        MXN: MXN
+      }
+    })
+  }
+
+  setInputAmount = (input) => {
+    this.setState({
+      inputAmount: input
+    })
+  }
+
   render() {
     return (
-        <Form />
       <div className="container">
 
         <div className="row">
           <div className="col-sm-12">
             <Header />
+            <Form setRates={this.setRates} setInputAmount={this.setInputAmount}/>
           </div>
         </div>
 
@@ -32,6 +48,7 @@ class App extends Component {
             { this.state.rates ? <CurrentRates rates={this.state.rates} /> : "" }
           </div>
         </div>
+
       </div>
     );
   }
