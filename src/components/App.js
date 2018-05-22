@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../App.css';
 import Header from './Header'
 import Form from './Form'
-import CurrencyRates from './CurrencyRates'
+import CurrentRates from './CurrentRates'
 
 class App extends Component {
   constructor(){
@@ -22,6 +22,7 @@ class App extends Component {
         <Header />
         <Form />
         { this.state.rates ? <CurrencyRates data={this.state.rates}/> : "" }
+            { this.state.rates ? <CurrentRates rates={this.state.rates} /> : "" }
       </div>
     );
   }
