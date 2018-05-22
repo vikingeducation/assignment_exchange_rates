@@ -18,11 +18,20 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="container-fluid">
-        <Header />
         <Form />
-        { this.state.rates ? <CurrencyRates data={this.state.rates}/> : "" }
+      <div className="container">
+
+        <div className="row">
+          <div className="col-sm-12">
+            <Header />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-sm-6">
             { this.state.rates ? <CurrentRates rates={this.state.rates} /> : "" }
+          </div>
+        </div>
       </div>
     );
   }
