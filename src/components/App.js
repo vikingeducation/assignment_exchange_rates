@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import CurrencyConverterContainer from "./CurrencyConverterContainer";
 import CurrencyRatesTableContainer from "./CurrencyRatesTableContainer";
 import JumbotronFluid from "./elements/JumbotronFluid";
-
+import config from '../config'
 class App extends Component {
   constructor() {
     super(),
@@ -13,9 +13,11 @@ class App extends Component {
         date: new Date().toISOString().slice(0, 10)
       });
   }
+
+
   getRates = () => {
     fetch(
-      `http://api.fixer.io/${this.state.date}?base=${this.state.baseCurrency}`
+      `http://api.fixer.io/${this.state.date}?base=${this.state.baseCurrency}?{config.key}`
     )
       .then(response => response.json())
       .then(json => {
@@ -60,6 +62,7 @@ class App extends Component {
     const { baseCurrency, rates, date } = this.state;
     const currenciesArray = Object.keys(rates);
     //console.log("RATES Passed", rates);
+    console.log("RATES Passed", config.key);
     return (
       <div className="wrapper">
         <JumbotronFluid heading="Currency Converter" />
