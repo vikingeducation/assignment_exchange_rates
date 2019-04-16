@@ -29,7 +29,7 @@ class App extends Component {
   componentDidMount() {
     this.setState({isFetching: true})
     const baseCurrency = this.state.baseCurrency === 'EUR' ? '' : `?base=${this.state.baseCurrency}`
-    fetch('https://api.fixer.io/latest' + baseCurrency)
+    fetch('https://api.exchangeratesapi.io/latest' + baseCurrency)
     .then( (response) => response.json())
     .then((json) => {
       this.setState({
@@ -46,7 +46,7 @@ class App extends Component {
     })
     this.setState({isFetching: true})
     const newCurrency = e.target.value
-    fetch('https://api.fixer.io/latest?base=' + newCurrency)
+    fetch('https://api.exchangeratesapi.io/latest?base=' + newCurrency)
     .then( (response) => response.json())
     .then((json) => {
       this.setState({
@@ -75,7 +75,7 @@ class App extends Component {
       }
       this.setState({isFetching: true})
 
-      fetch(`https://api.fixer.io/latest?base=${this.state.inputCurrency}`)
+      fetch(`https://api.exchangeratesapi.io/latest?base=${this.state.inputCurrency}`)
       .then( (response) => response.json())
       .then((json) => {
         this.setState({
@@ -101,7 +101,7 @@ class App extends Component {
       this.setState({isFetching: true});
 
       let promises = [];
-      const mainUrl = 'https://api.fixer.io/';
+      const mainUrl = 'https://api.exchangeratesapi.io/';
       let apiURL = '';
       const historicalDates = getDatesArray(this.state.startDate);
 
